@@ -9,7 +9,8 @@ public class Multa  {
 	private String LOCALIDAD;
 	private String DESC_INFRACCION;
 	private String MEDIO;
-	
+	private Multa siguiente;
+
 
 
 	public Multa (int pOBJECT_ID, String pFECHA_HORA, String pMedioDeteccion, String pClasevehiculo,String pTIPO_SERVICIO, String pInfraccion, String pDescInfraccion,  String pLOCALIDAD)
@@ -23,6 +24,14 @@ public class Multa  {
 		LOCALIDAD= pLOCALIDAD;
 		DESC_INFRACCION = pDescInfraccion;
 
+	}
+	public Multa darSiguiente()
+	{
+		return siguiente;
+	}
+	public void cambiarSiguiente(Multa pSiguiente)
+	{
+		siguiente = pSiguiente;
 	}
 
 	public int darID(){

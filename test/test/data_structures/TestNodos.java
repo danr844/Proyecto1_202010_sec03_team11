@@ -16,7 +16,7 @@ public class TestNodos {
 
 	@Before
 	public void setUp1() {
-		
+
 		nodo = new Node<Multa>();
 		multa = new Multa(0, "", "", "", "", "", "","");
 		nodo.cambiarDato(multa);
@@ -31,7 +31,7 @@ public class TestNodos {
 		nodo2.cambiarDato(nueva2);
 		nodo.cambiarSiguiente(nodo2);
 
-		
+
 	}
 
 	@Test

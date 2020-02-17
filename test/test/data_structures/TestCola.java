@@ -1,6 +1,9 @@
-package test.logic;
+package test.data_structures;
 
 import static org.junit.Assert.*;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import model.data_structures.Cola;
 import model.data_structures.Multa;
@@ -8,21 +11,15 @@ import model.data_structures.Node;
 import model.data_structures.Pila;
 import model.logic.Modelo;
 
-import org.junit.Before;
-import org.junit.Test;
+public class TestCola {
 
-public class TestModelo {
+
 
 	private Modelo modelo;
 	private static int CAPACIDAD=100;
 	private Multa nueva;
 	private Multa nueva2;
 	private Cola<Multa>cola;
-	private Pila<Multa>pila;
-
-
-
-
 
 	@Before
 	public void setUp1() {
@@ -30,13 +27,9 @@ public class TestModelo {
 		nueva = new Multa(1234, "hola1", "hola2", "hola3", "hola4", "hola5", "hola", "hola7");
 		nueva2 = new Multa(0000, "0000", "0009", "0008", "0007", "0006", "0005", "0004");
 
-		pila = modelo.darPila();
 		cola = modelo.darCola();
 		cola.enqueue(nueva);
-		pila.push(nueva);
-
 		cola.enqueue(nueva2);
-		pila.push(nueva2);
 	}
 
 	public void setUp2() {
@@ -54,7 +47,6 @@ public class TestModelo {
 		// TODO
 		setUp1();
 		assertEquals("No tiene el tamaño esperado", 2, modelo.darTamanoCola());
-		assertEquals("No tiene el tamaño esperado", 2, modelo.darTamanoPila());
 
 
 	}
@@ -65,10 +57,8 @@ public class TestModelo {
 		// TODO Completar la prueba
 		setUp1();
 		assertNotNull("El primer objeto no deberia ser null", modelo.darPrimerElementoCola());
-		assertNotNull("El primer objeto no deberia ser null", modelo.darPrimerElementoPila());
 
 		assertEquals("No tiene el ID esperado", 1234, modelo.eliminarEnCola().darID());
-		assertEquals("No tiene el ID esperado", 0000, modelo.eliminarEnPila().darID());
 
 	}
 
@@ -80,16 +70,19 @@ public class TestModelo {
 		cola.dequeue();
 		cola.dequeue();
 		assertNull("El objeto no deberia ser distinto de null",modelo.darPrimerElementoCola());
-		pila.pop();
-		pila.pop();
-		assertNull("El objeto no deberia ser distinto de null",modelo.darPrimerElementoPila());
 
 	}
-	@Test
 
-	public void testCargarInfo() {
-		setUp2();
-		assertNotNull("la informacon no fue cargada", modelo.cargarInfo());
-	}
+
 
 }
+
+
+
+
+
+
+
+
+
+

@@ -13,10 +13,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 import model.data_structures.ArregloDinamico;
+import model.data_structures.Cola;
 import model.data_structures.IArregloDinamico;
 import model.data_structures.Multa;
+import model.data_structures.Pila;
 import model.data_structures.Node;
 
 
@@ -28,34 +31,34 @@ public class Modelo {
 	/**
 	 * Atributos del modelo del mundo
 	 */
-	private ArregloDinamico<Integer> datos;
 	private Node<Multa> primero;
 	private int numeroNodos;
-	private Node<Multa> ultimo;
+	private Cola<Multa> cola;
+	private Pila<Multa> pila;
 	/**
 	 * Constructor del modelo del mundo con capacidad predefinida
 	 */
 	public Modelo()
 	{
 		primero = null;
+		cola = new Cola<Multa>();
+		pila=new Pila<Multa>();
+
 	}
 
-	/**
-	 * Constructor del modelo del mundo con capacidad dada
-	 * @param tamano
-	 */
-	public Modelo(int capacidad)
-	{
-		datos = new ArregloDinamico<Integer>(capacidad);
-	}
+
 
 	/**
 	 * Servicio de consulta de numero de elementos presentes en el modelo 
 	 * @return numero de elementos presentes en el modelo
 	 */
-	public int darTamano()
+	public int darTamanoCola()
 	{
-		return datos.darTamano();
+		return cola.dartamanoCola();
+	}
+	public int darTamanoPila()
+	{
+		return pila.darTamanoPila();
 	}
 
 	/**
@@ -63,30 +66,24 @@ public class Modelo {
 	 * @param <T>
 	 * @param dato
 	 */
-	public <T> void agregar(Multa dato)
+	public <T> void agregarALaCola(Multa dato)
 	{	
-		if(primero== null){
-			primero  = new Node <Multa>();
-			primero.cambiarDato(dato);
-			numeroNodos++;
-			ultimo = primero;
-		}
-		else{
-			Node<Multa> nodo= new Node<Multa>();
-			nodo.cambiarDato(dato);
-			ultimo.cambiarSiguiente(nodo);
-			ultimo = nodo;
-			numeroNodos++;
-		
-		}
-			
-	}
-	public int darNumeroNodos(){
-		return numeroNodos;
+		cola.enqueue(dato);	
 	}
 	
-	public Node<Multa> darUltimoNodo(){
-		return ultimo;
+	public <T> void agregarALaPila(Multa dato)
+	{
+		pila.push(dato);
+	}
+	
+	public Multa eliminarEnCola()
+	{
+		return cola.dequeue();
+	}
+	
+	public Multa eliminarEnPila()
+	{
+		return pila.pop();
 	}
 	
 	public List<Double> cargarInfo(){
@@ -116,7 +113,8 @@ public class Modelo {
 
 				
 				Multa user = new Multa(id,fecha, medio, Clasevehi, tipoServicio, Infraccion, DescInfra, Localidad );
-				agregar(user);
+				agregarALaCola(user);
+				agregarALaPila(user);
 				if(e.getAsJsonObject().has("geometry") && !e.getAsJsonObject().get("geometry").isJsonNull()) {
 					for(JsonElement geoElem: e.getAsJsonObject().get("geometry").getAsJsonObject().get("coordinates").getAsJsonArray()) {
 						geo.add(geoElem.getAsDouble());
@@ -133,38 +131,112 @@ public class Modelo {
 		}
 		return geo;
 	}
-	public Node<Multa> darPrimero(){
-		return primero;
+
+	public Cola<Multa> consultaInfraccion()
+	{
+		 Cola<Multa> retorno= new Cola<Multa>();
+		 Cola<Multa> deComparar= new Cola<Multa>();
+		 String leyendo="";
+		 int i=0;
+		 while(i<numeroNodos)
+		 {
+			 if(deComparar.estavacia())
+			 {
+				 Multa primero=cola.dequeue();
+				 deComparar.enqueue(primero);
+				 leyendo=primero.darInfraccion();
+			 }
+			 else
+			 {
+				 Multa primero=cola.dequeue();
+				 if(leyendo.equals(primero.darInfraccion()))
+					 deComparar.enqueue(primero); 
+				 
+				 else
+				 {
+					 if(deComparar.dartamanoCola()>retorno.dartamanoCola())
+						 retorno=deComparar;
+					 
+					 deComparar=new Cola<Multa>();
+					 deComparar.enqueue(primero);
+					 leyendo=primero.darInfraccion();
+				 }
+			 }
+			 i++;
+		 }
+		 
+		 return retorno;
 	}
+	
+	private boolean estaEnLaLista(ArrayList<String> pLista, String pInfraccion)
+	{
+		boolean retorno=false;
+
+		for(String e: pLista)
+		{
+			if(e.equals(pInfraccion))
+				retorno=true;
+		}
+
+
+		return retorno;
+	}	
+
+	public Cola<Multa> procesarElementosPila(String pInfraccion, int numeroComparendos)
+	{
+		int k =0;
+		Cola<Multa> respuesta = new Cola<Multa>();
+		Multa actual = pila.darPrimerElemento().darTvalor();
+
+		while(actual!=null&&k<numeroComparendos)
+		{
+			actual = pila.pop();
+			if(actual.darInfraccion().equals(pInfraccion)){
+				respuesta.enqueue(actual);
+				k++;
+			}
+			
+		}
+		return respuesta;
+	}
+	public Node<Multa> darPrimerElementoCola(){
+		return cola.darPrimerElemento();
+	}
+	public Node<Multa> darPrimerElementoPila(){
+		return pila.darPrimerElemento();
+	}
+	public Cola<Multa> darCola(){
+		return cola;
+	}
+	public Pila<Multa> darPila(){
+		return pila;
+	}
+
 	/**
 	 * Requerimiento buscar dato
 	 * @param dato Dato a buscar
 	 * @return dato encontrado
 	 */
-	public Node<Multa> buscar(int dato)
-	{
-		Node <Multa> actual=primero;
-		while(actual!=null)
-		{
-		if(actual.darTvalor().darID()==dato)
-			return actual;
-		else actual=actual.darSiguiente();
-		
-		}
-		return null;
-	}
+//	public Node<Multa> buscar(int dato)
+//	{
+//		Node <Multa> actual=primero;
+//		while(actual!=null)
+//		{
+//		if(actual.darTvalor().darID()==dato)
+//			return actual;
+//		else actual=actual.darSiguiente();
+//		
+//		}
+//		return null;
+//	}
 
 	/**
 	 * Requerimiento eliminar dato
 	 * @param object Dato a eliminar
 	 * @return dato eliminado
 	 */
-	public Integer eliminar(Integer object)
-	{
-		return  datos.eliminar(object);
-	}
-	public IArregloDinamico<Integer> dardatos(){
-		return datos;
-	}
 
+//	public IArregloDinamico<Integer> dardatos(){
+//		return datos;
+//	}
 }
