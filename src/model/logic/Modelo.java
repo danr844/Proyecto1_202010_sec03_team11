@@ -211,7 +211,35 @@ public class Modelo {
 	public Pila<Multa> darPila(){
 		return pila;
 	}
+	
+	public Multa darPrimerMultaConLocalidad( String PLocalidad){
+		return null;
+	}
+	public ArrayList<Multa> darComparendoPorFecha( String FECHA_HORA){
+		return null;}
 
+
+	public ArrayList<Multa> compararMultasfecha( String FECHA_HORA){
+		return null;}
+
+
+	public Multa darPrimerComparendoInfraccion(String pInfraccion){
+		return null;}
+
+
+	public ArrayList<Multa> darComparendosPorInfraccion( String pInfraccion){
+		return null;}
+
+	public ArrayList<Multa> compararMultasinfraccionYTipoServicio(String pInfraccion, String pTipoServicio){
+		return null;}
+
+	public ArrayList<Multa> darComparendosLocalidadYFecha(String pLocalidad, String FechaInicial, String FechaFinal){
+		return null;}
+
+	public ArrayList<Multa> darMayoresInfracciones(int pGruposDeInfracccionesBuscados, String fechaInicial, String FechaFinal){
+		return null;}
+
+	public void generarGraficaASCII(){}
 	/**
 	 * Requerimiento buscar dato
 	 * @param dato Dato a buscar
