@@ -35,6 +35,10 @@ public class Modelo {
 	private int numeroNodos;
 	private Cola<Multa> cola;
 	private Pila<Multa> pila;
+	private double latitudMinima;
+	private double latitudMaxima;
+	private double longitudMinima;
+	private double longitudmaxima;
 	/**
 	 * Constructor del modelo del mundo con capacidad predefinida
 	 */
