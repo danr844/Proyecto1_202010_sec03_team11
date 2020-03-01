@@ -118,7 +118,6 @@ public class Modelo
 	public ArregloDinamico<Comparendo> comparendosConInfraccion(String pInfraccion)
 	{
 		ArregloDinamico<Comparendo> retorno= new ArregloDinamico<>(0);
-		ordenarPorMergeSort(datos, 0, datos.darTamano()-1);
 		int i=0;
 		while(i<datos.darTamano())
 		{
@@ -126,6 +125,19 @@ public class Modelo
 			if(actual.darInfraccion().equals(pInfraccion))
 				retorno.agregar(actual);
 			i++;
+		}
+		return retorno;
+	}
+	
+	public int consultarNumeroComparendosPorInfraccionTipo(String pInfraccion, String pTipo)
+	{
+		int retorno=0;
+		int i=0;
+		while(i<datos.darTamano())
+		{
+			Comparendo actual= datos.darElemento(i);
+			if(actual.darInfraccion()==pInfraccion && actual.darTipoServicio()==pTipo)
+				retorno++;
 		}
 		return retorno;
 	}

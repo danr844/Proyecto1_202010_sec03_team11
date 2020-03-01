@@ -128,34 +128,57 @@ public class Controller {
 				break;
 
 			case 5:
-				
-				view.printMessage("------------------------------------------------------------------------\n Se esta ordenando el arreglo: \n------------------------------------------------------------------------");
-				ArregloDinamico<Comparendo>copia_Comparendos_Quick  = modelo.copiarComparendos();
-				long startTime2 = System.currentTimeMillis(); 
-				modelo.ordenarPorQuick(copia_Comparendos_Quick);
-				long endTime2 = System.currentTimeMillis(); // medición tiempo actual
-				long duration2 = endTime2 - startTime2; // duracion de ejecucion del algoritmo
-				view.printMessage("Tiempo de ordenamiento: " + duration2 + " milisegundos");
-
-				view.printMessage("------------------------------------------------------------------------\n Primeros 10 elementos: \n------------------------------------------------------------------------");
-
-				for(int i=0; i<10; i++)
+				view.printMessage("------------------------------------------------------------------------\n Ingrese el codigo de infraccion del comparendo: \n------------------------------------------------------------------------");
+				String infraccion=lector.next();
+				view.printMessage("------------------------------------------------------------------------\n Se esta buscando el comparendo: \n------------------------------------------------------------------------");
+				Comparendo comparendo=modelo.buscarPrimeroPorInfraccion(infraccion);
+				if(comparendo!=null)
 				{
-					Comparendo actual=copia_Comparendos_Quick.darElemento(i);
-					view.printMessage(""+ actual.darID()+","+actual.darFecha()+","+ actual.darClaseVehiculo()+","+actual.darTipoServicio()+","+actual.darLocalidad()+"\n---------------------------");
+				view.printMessage(""+comparendo.darID()+","+comparendo.darFecha()+","+ comparendo.darClaseVehiculo()+","+comparendo.darTipoServicio()+","+comparendo.darLocalidad()+"\n---------------------------");
 				}
-				view.printMessage("------------------------------------------------------------------------\n Ultimos 10 elementos: \n------------------------------------------------------------------------");
-
-				for(int i=1; i<11; i++)
-				{
-					Comparendo actual=copia_Comparendos_Quick.darElemento(copia_Comparendos_Quick.darTamano()-i);
-					view.printMessage(""+ actual.darID()+","+actual.darFecha()+","+ actual.darClaseVehiculo()+","+actual.darTipoServicio()+","+actual.darLocalidad()+"\n---------------------------");
-				}
-				// mostrar los resultados del algoritmo xxxxxSort que quedaron en el arreglo
-				// copia_Comparendos: los 10 primeros y los 10 últimos comparendos resultantes
-				view.printMessage("------------------------------------------------------------------------");
+				else System.out.println("------------------------------------------------------------------------\n No se encontro ningun comparendo con el codigo ingresado------------------------------------------------------------------------\n");
 				break;
-			case 6: 
+			case 6:
+				view.printMessage("------------------------------------------------------------------------\n Ingrese el codigo de infraccion de la lista de comparendos: \n------------------------------------------------------------------------");
+				String infracciones=lector.next();
+				view.printMessage("------------------------------------------------------------------------\n Se esta buscando los comparendos: \n------------------------------------------------------------------------");
+				ArregloDinamico<Comparendo> comparendos=modelo.comparendosConInfraccion(infracciones);
+				modelo.ordenarPorMergeSort(comparendos, 0, comparendos.darTamano()-1);
+				if(!comparendos.estaVacio())
+				{	
+					view.printMessage("------------------------------------------------------------------------\n Primeros 10 elementos: \n------------------------------------------------------------------------");
+
+					for(int i=0; i<comparendos.darTamano()-1; i++)
+					{
+						Comparendo actual=comparendos.darElemento(i);
+						view.printMessage(""+ actual.darID()+","+actual.darFecha()+","+ actual.darClaseVehiculo()+","+actual.darTipoServicio()+","+actual.darLocalidad()+"\n---------------------------");
+					}
+					view.printMessage("Total de comparendos de la consulta: "+comparendos.darTamano()+"\n---------------------------");
+				}
+				else System.out.println("------------------------------------------------------------------------\n No se encontro ningun comparendo con el codigo ingresado------------------------------------------------------------------------\n");
+				break;
+				
+			case 7:
+				view.printMessage("------------------------------------------------------------------------\n Ingrese el codigo de infraccion de la consulta: \n------------------------------------------------------------------------");
+				String consulta=lector.next();
+				view.printMessage("------------------------------------------------------------------------\n Se esta iniciando la consulta: \n------------------------------------------------------------------------");
+				ArregloDinamico<Comparendo> comparendos=modelo.comparendosConInfraccion(infracciones);
+				modelo.ordenarPorMergeSort(comparendos, 0, comparendos.darTamano()-1);
+				if(!comparendos.estaVacio())
+				{	
+					view.printMessage("------------------------------------------------------------------------\n Primeros 10 elementos: \n------------------------------------------------------------------------");
+
+					for(int i=0; i<comparendos.darTamano()-1; i++)
+					{
+						Comparendo actual=comparendos.darElemento(i);
+						view.printMessage(""+ actual.darID()+","+actual.darFecha()+","+ actual.darClaseVehiculo()+","+actual.darTipoServicio()+","+actual.darLocalidad()+"\n---------------------------");
+					}
+					view.printMessage("Total de comparendos de la consulta: "+comparendos.darTamano()+"\n---------------------------");
+				}
+				else System.out.println("------------------------------------------------------------------------\n No se encontro ningun comparendo con el codigo ingresado------------------------------------------------------------------------\n");
+				break;
+			
+			case 8: 
 				view.printMessage("------------------------------------------------------------------------\n Cerrando el programa: \n------------------------------------------------------------------------");
 				lector.close();
 				fin = true;
