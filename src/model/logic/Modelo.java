@@ -109,12 +109,25 @@ public class Modelo
 		{
 			Comparendo actual= datos.darElemento(i);
 			if(actual.darInfraccion().equals(pInfraccion))
-			{
 				return actual;
-			}
-			else i++;
+			
+			i++;
 		}
 		return null;
+	}
+	public ArregloDinamico<Comparendo> comparendosConInfraccion(String pInfraccion)
+	{
+		ArregloDinamico<Comparendo> retorno= new ArregloDinamico<>(0);
+		ordenarPorMergeSort(datos, 0, datos.darTamano()-1);
+		int i=0;
+		while(i<datos.darTamano())
+		{
+			Comparendo actual= datos.darElemento(i);
+			if(actual.darInfraccion().equals(pInfraccion))
+				retorno.agregar(actual);
+			i++;
+		}
+		return retorno;
 	}
 	/**
 	 * Requerimiento eliminar dato
@@ -187,7 +200,8 @@ public class Modelo
 		{
 			Comparator<Comparendo> ID = new Comparator<Comparendo>() {
 				@Override
-				public int compare(Comparendo o1, Comparendo o2) {
+				public int compare(Comparendo o1, Comparendo o2) 
+				{
 					if(o1.darID()<o2.darID())return -1;
 					else if (o1.darID()>o2.darID())
 						return 1;
@@ -196,16 +210,21 @@ public class Modelo
 			};
 			return ID;
 		}
-		else if(caracteristicaComparable.equals("Infraccion")){
+		else if(caracteristicaComparable.equals("Infraccion"))
+		{
 
-			Comparator<Comparendo> Infraccion = new Comparator<Comparendo>() {
+			Comparator<Comparendo> Infraccion = new Comparator<Comparendo>() 
+			{
 				@Override
-				public int compare(Comparendo o1, Comparendo o2) {
+				public int compare(Comparendo o1, Comparendo o2) 
+				{
 					return o1.darInfraccion().compareTo(o2.darInfraccion());
 				}
 			};
+		
 			return Infraccion;
 		}
+	
 		else if(caracteristicaComparable.equals("Fecha")){
 
 			Comparator<Comparendo> Fecha = new Comparator<Comparendo>() {
