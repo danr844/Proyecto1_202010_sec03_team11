@@ -4,7 +4,7 @@ public class Node <T> {
 
 
 	private Node<T> siguiente;
-
+	
 	private T valor;
 
 	public Node ()
@@ -20,8 +20,7 @@ public class Node <T> {
 	{
 		siguiente = pSiguiente;
 	}
-	public void cambiarDato(T dato)
-	{
+	public void cambiarDato(T dato){
 		valor= dato;
 	}
 	public T darTvalor(){

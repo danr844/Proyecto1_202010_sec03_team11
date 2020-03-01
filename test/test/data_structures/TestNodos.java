@@ -5,28 +5,28 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import model.data_structures.Multa;
+import model.data_structures.Comparendo;
 import model.data_structures.Node;
 
 public class TestNodos {
 
 	private static int TAMANO=100;
-	private Multa multa;
-	private Node<Multa> nodo;
+	private Comparendo multa;
+	private Node<Comparendo> nodo;
 
 	@Before
 	public void setUp1() {
 
-		nodo = new Node<Multa>();
-		multa = new Multa(0, "", "", "", "", "", "","");
+		nodo = new Node<Comparendo>();
+		multa = new Comparendo(0, "", "", "", "", "", "","");
 		nodo.cambiarDato(multa);
 	}
 
 	public void setUp2() {
-		nodo = new Node<Multa>();
-		Node<Multa> nodo2 = new Node<Multa>();
-		multa = new Multa(0, "", "", "", "", "", "","");
-		Multa nueva2 = new Multa(1, "we", "na", "s", "xd", "qu", "e","massss");
+		nodo = new Node<Comparendo>();
+		Node<Comparendo> nodo2 = new Node<Comparendo>();
+		multa = new Comparendo(0, "", "", "", "", "", "","");
+		Comparendo nueva2 = new Comparendo(1, "we", "na", "s", "xd", "qu", "e","massss");
 		nodo.cambiarDato(multa);
 		nodo2.cambiarDato(nueva2);
 		nodo.cambiarSiguiente(nodo2);

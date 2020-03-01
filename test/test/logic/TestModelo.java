@@ -2,46 +2,32 @@ package test.logic;
 
 import static org.junit.Assert.*;
 
-import model.data_structures.Cola;
-import model.data_structures.Multa;
+import model.data_structures.ArregloDinamico;
+import model.data_structures.Comparendo;
 import model.data_structures.Node;
-import model.data_structures.Pila;
 import model.logic.Modelo;
 
 import org.junit.Before;
 import org.junit.Test;
 
 public class TestModelo {
-
+	
 	private Modelo modelo;
-	private static int CAPACIDAD=100;
-	private Multa nueva;
-	private Multa nueva2;
-	private Cola<Multa>cola;
-	private Pila<Multa>pila;
+	private Comparendo nueva;
+	private Comparendo nueva2;
 
 
-
-
-
+	
 	@Before
 	public void setUp1() {
-		modelo= new Modelo();
-		nueva = new Multa(1234, "hola1", "hola2", "hola3", "hola4", "hola5", "hola", "hola7");
-		nueva2 = new Multa(0000, "0000", "0009", "0008", "0007", "0006", "0005", "0004");
-
-		pila = modelo.darPila();
-		cola = modelo.darCola();
-		cola.enqueue(nueva);
-		pila.push(nueva);
-
-		cola.enqueue(nueva2);
-		pila.push(nueva2);
+		modelo= new Modelo(15);
+		nueva = new Comparendo(1234, "hola1", "hola2", "hola3", "hola4", "hola5", "hola", "hola7");
+		nueva2 = new Comparendo(0000, "0000", "0009", "0008", "0007", "0006", "0005", "0004");
+		modelo.agregarArregloDinamico(nueva);
+		modelo.agregarArregloDinamico(nueva2);
+		
 	}
-
-	public void setUp2() {
-		//test para el arreglo dinamico, no aplica.
-	}
+	
 
 	@Test
 	public void testModelo() {
@@ -53,43 +39,37 @@ public class TestModelo {
 	public void testDarTamano() {
 		// TODO
 		setUp1();
-		assertEquals("No tiene el tamaño esperado", 2, modelo.darTamanoCola());
-		assertEquals("No tiene el tamaño esperado", 2, modelo.darTamanoPila());
-
-
+		assertEquals("No tiene el tamaño esperado", 2, modelo.darTamano());
+		
 	}
 
 	@Test
 	public void testAgregar() 
 	{
-		// TODO Completar la prueba
+			// TODO Completar la prueba
 		setUp1();
-		assertNotNull("El primer objeto no deberia ser null", modelo.darPrimerElementoCola());
-		assertNotNull("El primer objeto no deberia ser null", modelo.darPrimerElementoPila());
+		assertEquals("No tiene el tamaño esperado", 2, modelo.darTamano());
+		nueva = new Comparendo(1, "hola1", "hola2", "hola3", "hola4", "hola5", "hola", "hola7");
+		modelo.agregarArregloDinamico(nueva);
+		assertEquals("No tiene el tamaño esperado", 3, modelo.darTamano());
 
-		assertEquals("No tiene el ID esperado", 1234, modelo.eliminarEnCola().darID());
-		assertEquals("No tiene el ID esperado", 0000, modelo.eliminarEnPila().darID());
-
+			
 	}
 
 	@Test
-	public void testEliminar()
+	public void testBuscar()
 	{
 		setUp1();
 		// TODO Completar la prueba
-		cola.dequeue();
-		cola.dequeue();
-		assertNull("El objeto no deberia ser distinto de null",modelo.darPrimerElementoCola());
-		pila.pop();
-		pila.pop();
-		assertNull("El objeto no deberia ser distinto de null",modelo.darPrimerElementoPila());
-
+		assertNotNull("El objeto no deberia ser null1", modelo.buscar(1234));
+		assertNotNull("El objeto no deberia ser null", modelo.buscar(0000));
+		assertNull("El objeto deberia ser distinto de null",modelo.buscar(1));
 	}
 	@Test
-
+	
 	public void testCargarInfo() {
-		setUp2();
-		assertNotNull("la informacon no fue cargada", modelo.cargarInfo());
+		setUp1();
+		assertNotNull("la informacion no fue cargada", modelo.cargarInfo());
 	}
 
 }

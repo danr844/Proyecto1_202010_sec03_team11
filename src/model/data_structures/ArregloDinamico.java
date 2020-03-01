@@ -27,16 +27,23 @@ public class ArregloDinamico <T extends Comparable<T>> implements IArregloDinami
 	 */
 	public ArregloDinamico( int max )
 	{
-		elementos =  (T[]) new Comparable[max];
+		elementos =   (T[]) new Comparable[max];
 		tamanoMax = max;
 		tamanoAct = 0;
+		int x=0;
+		System.out.println(x++);
+		System.out.println(++x);
+		System.out.println(x--);
+		System.out.println(--x);
+
+		
 	}
 
 	public void agregar( T dato )
 	{
 		if ( tamanoAct == tamanoMax )
 		{  // caso de arreglo lleno (aumentar tamaNo)
-			tamanoMax = 2 * tamanoMax;
+			tamanoMax =  tamanoMax*2;
 			Object [ ] copia = elementos;
 			elementos = (T[]) new Comparable[tamanoMax];
 			for ( int i = 0; i < tamanoAct; i++)
@@ -55,10 +62,17 @@ public class ArregloDinamico <T extends Comparable<T>> implements IArregloDinami
 	public int darTamano() {
 		return tamanoAct;
 	}
+	public boolean estaVacio()
+	{
+		return true? tamanoAct==0:false;
+	}
 
 	public  T darElemento(int i) {
 		// TODO implementar
 		return elementos[i];
+	}
+	public T[] darElementos(){
+		return elementos;
 	}
 
 	public T buscar(T dato) {
@@ -74,6 +88,15 @@ public class ArregloDinamico <T extends Comparable<T>> implements IArregloDinami
 			}
 		}
 		return null;
+	}
+	public void exch( int i, int j)  
+	{  
+		T t = elementos[i];
+		elementos[i] = elementos[j]; 
+		elementos[j] = t; 
+	}
+	public void cambiarElementoEnPosicion(int i, T k){
+		elementos[i] = k;
 	}
 	public T eliminar(T dato) {
 		// TODO implementar
