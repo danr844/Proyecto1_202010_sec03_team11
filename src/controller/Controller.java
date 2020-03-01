@@ -1,5 +1,6 @@
 package controller;
 
+import java.text.ParseException;
 import java.util.Scanner;
 
 import com.sun.glass.events.ViewEvent;
@@ -42,7 +43,12 @@ public class Controller {
 			{
 			case 1:
 				view.printMessage("------------------------------------------------------------------------\n Se esta cargando la informacion \n------------------------------------------------------------------------");
-				modelo.cargarInfo();
+				try {
+					modelo.cargarInfo();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				if(modelo.darTamano()!=0)
 				{
 					Comparendo encontrado = modelo.dardatos().darElemento(0);
@@ -149,6 +155,10 @@ public class Controller {
 				// copia_Comparendos: los 10 primeros y los 10 últimos comparendos resultantes
 				view.printMessage("------------------------------------------------------------------------");
 				break;
+			case 6: 
+				view.printMessage("------------------------------------------------------------------------\n Cerrando el programa: \n------------------------------------------------------------------------");
+				lector.close();
+				fin = true;
 
 			default: 
 				view.printMessage("--------------------------------------------------------------- \n Opcion Invalida !! \n---------------------------------------------------------------");

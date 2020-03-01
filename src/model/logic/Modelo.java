@@ -4,8 +4,13 @@ package model.logic;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -33,7 +38,7 @@ public class Modelo
 	private int numeroNodos;
 	private Ordenamientos ordenar;
 
-	
+
 
 	/**
 	 * Constructor del modelo del mundo con capacidad dada
@@ -50,7 +55,7 @@ public class Modelo
 	}   
 
 
-	public List<Double> cargarInfo(){
+	public List<Double> cargarInfo() throws ParseException{
 		List<Double> geo = new ArrayList<Double>();
 
 		try {
@@ -65,9 +70,11 @@ public class Modelo
 			reader = new JsonReader(new FileReader(path));
 			JsonElement elem = JsonParser.parseReader(reader);
 			JsonArray ja = elem.getAsJsonObject().get("features").getAsJsonArray();
+			SimpleDateFormat parser = new SimpleDateFormat("yyyy/MM/dd");
 			for(JsonElement e: ja) {
 				int id = e.getAsJsonObject().get("properties").getAsJsonObject().get("OBJECTID").getAsInt();
-				String fecha = e.getAsJsonObject().get("properties").getAsJsonObject().get("FECHA_HORA").getAsString();
+				String fechaString = e.getAsJsonObject().get("properties").getAsJsonObject().get("FECHA_HORA").getAsString();
+				Date fecha = parser.parse(fechaString);
 				String medio = e.getAsJsonObject().get("properties").getAsJsonObject().get("MEDIO_DETE").getAsString();
 				String Clasevehi= e.getAsJsonObject().get("properties").getAsJsonObject().get("CLASE_VEHI").getAsString();
 				String tipoServicio = e.getAsJsonObject().get("properties").getAsJsonObject().get("TIPO_SERVI").getAsString();
@@ -78,7 +85,7 @@ public class Modelo
 
 				Comparendo user = new Comparendo(id,fecha, medio, Clasevehi, tipoServicio, Infraccion, DescInfra, Localidad );
 				datos.agregar(user);
-				
+
 				if(e.getAsJsonObject().has("geometry") && !e.getAsJsonObject().get("geometry").isJsonNull()) {
 					for(JsonElement geoElem: e.getAsJsonObject().get("geometry").getAsJsonObject().get("coordinates").getAsJsonArray()) {
 						geo.add(geoElem.getAsDouble());
@@ -143,17 +150,73 @@ public class Modelo
 		return datos.darTamano();
 	}
 	public ArregloDinamico<Comparendo> darArreglo(){
-			return datos;
+		return datos;
+	}
+	public Comparendo buscar(int datoID)
+	{
+		int i = 0;
+		Comparendo actual=datos.darElemento(i);
+
+		while(datos.darElemento(i)!=null)
+		{
+			actual=datos.darElemento(i);
+			if(actual.darID() == datoID )
+				return actual;
+			++i;
+
+		}
+		return null;
 	}
 
-//	public int darNumeroNodos(){
-//		return numeroNodos;
-//	}
+	public Comparator<Comparendo> darComparador(String caracteristicaComparable){
+		
+		if(caracteristicaComparable.equals("ID"))
+		{
+			Comparator<Comparendo> ID = new Comparator<Comparendo>() {
+				@Override
+				public int compare(Comparendo o1, Comparendo o2) {
+					if(o1.darID()<o2.darID())return -1;
+					else if (o1.darID()>o2.darID())
+						return 1;
+					return 0;	
+				}
+			};
+			return ID;
+		}
+		else if(caracteristicaComparable.equals("Infraccion")){
 
-//	public Node<Comparendo> darUltimoNodo(){
-//		return ultimo;
-//	}
-//	
+			Comparator<Comparendo> Infraccion = new Comparator<Comparendo>() {
+				@Override
+				public int compare(Comparendo o1, Comparendo o2) {
+					return o1.darInfraccion().compareTo(o2.darInfraccion());
+				}
+			};
+			return Infraccion;
+		}
+		else if(caracteristicaComparable.equals("Fecha")){
+
+			Comparator<Comparendo> Fecha = new Comparator<Comparendo>() {
+				@Override
+				public int compare(Comparendo o1, Comparendo o2) {
+					return o1.darFecha().compareTo(o2.darFecha());	
+				}
+			};
+			return Fecha;
+		}
+		else 
+			return null;
+
+
+	}
+
+	//	public int darNumeroNodos(){
+	//		return numeroNodos;
+	//	}
+
+	//	public Node<Comparendo> darUltimoNodo(){
+	//		return ultimo;
+	//	}
+	//	
 	/**
 	 * Requerimiento de agregar dato
 	 * @param <T>
@@ -185,22 +248,8 @@ public class Modelo
 	 * @param dato Dato a buscar
 	 * @return dato encontrado
 	 */
-	public Comparendo buscar(int datoID)
-	{
-		int i = 0;
-		Comparendo actual=datos.darElemento(i);
 
-		while(datos.darElemento(i)!=null)
-		{
-			 actual=datos.darElemento(i);
-			if(actual.darID() == datoID )
-				return actual;
-			++i;
-
-		}
-		return null;
-		}
-	}
+}
 
 
 
