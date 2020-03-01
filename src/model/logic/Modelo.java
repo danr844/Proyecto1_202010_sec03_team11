@@ -102,6 +102,20 @@ public class Modelo
 		return geo;
 	}
 
+	public Comparendo buscarPrimeroPorInfraccion(String pInfraccion)
+	{
+		int i=0;
+		while(i<datos.darTamano())
+		{
+			Comparendo actual= datos.darElemento(i);
+			if(actual.darInfraccion().equals(pInfraccion))
+			{
+				return actual;
+			}
+			else i++;
+		}
+		return null;
+	}
 	/**
 	 * Requerimiento eliminar dato
 	 * @param object Dato a eliminar
@@ -155,11 +169,10 @@ public class Modelo
 	public Comparendo buscar(int datoID)
 	{
 		int i = 0;
-		Comparendo actual=datos.darElemento(i);
 
 		while(datos.darElemento(i)!=null)
 		{
-			actual=datos.darElemento(i);
+			Comparendo actual=datos.darElemento(i);
 			if(actual.darID() == datoID )
 				return actual;
 			++i;
@@ -169,7 +182,7 @@ public class Modelo
 	}
 
 	public Comparator<Comparendo> darComparador(String caracteristicaComparable){
-		
+
 		if(caracteristicaComparable.equals("ID"))
 		{
 			Comparator<Comparendo> ID = new Comparator<Comparendo>() {
