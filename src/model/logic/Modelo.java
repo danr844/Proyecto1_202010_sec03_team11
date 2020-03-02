@@ -8,7 +8,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +21,6 @@ import com.google.gson.stream.JsonReader;
 import model.data_structures.ArregloDinamico;
 import model.data_structures.IArregloDinamico;
 import model.data_structures.Comparendo;
-import model.data_structures.Node;
 import model.data_structures.Ordenamientos; 
 
 /**
@@ -35,8 +33,6 @@ public class Modelo
 	 * Atributos del modelo del mundo
 	 */
 	private ArregloDinamico<Comparendo> datos;
-	private int numeroNodos;
-	private Ordenamientos ordenar;
 
 
 
@@ -49,9 +45,9 @@ public class Modelo
 		datos = new ArregloDinamico<Comparendo>(capacidad);
 
 	}
-	public static  boolean   less(Comparendo a, Comparendo a2)  
+	public static  boolean   less(Comparendo a, Comparendo a2, Comparator comparador)  
 	{  
-		return Ordenamientos.less(a, a2); 
+		return Ordenamientos.less(a, a2,comparador); 
 	}   
 
 
@@ -110,7 +106,7 @@ public class Modelo
 			Comparendo actual= datos.darElemento(i);
 			if(actual.darInfraccion().equals(pInfraccion))
 				return actual;
-			
+
 			i++;
 		}
 		return null;
@@ -128,7 +124,7 @@ public class Modelo
 		}
 		return retorno;
 	}
-	
+
 	public int consultarNumeroComparendosPorInfraccionTipo(String pInfraccion, String pTipo)
 	{
 		int retorno=0;
@@ -141,6 +137,61 @@ public class Modelo
 		}
 		return retorno;
 	}
+	public Comparendo darComparendoPorInfraccion(String pInfraccion){
+		ArregloDinamico<Comparendo>lista= copiarComparendos();
+		Comparator<Comparendo> compare = darComparador("Infraccion");
+		Ordenamientos.sortMerge(lista.darElementos(), 0,lista.darTamano()-1, compare);
+		int inicio = 0;
+		int fin = lista.darTamano() - 1;
+		boolean encontre = false;
+		Comparendo respuesta=null;
+		while( inicio <= fin && !encontre )
+		{
+			int medio = ( inicio + fin ) / 2;
+			if( lista.darElemento(medio).darInfraccion().compareTo(pInfraccion)==0 ){
+				respuesta = lista.darElemento(medio);
+				encontre = true;
+			}
+			else if( lista.darElemento(medio).darInfraccion().compareTo(pInfraccion)>0 )
+				fin = medio - 1;
+			else
+				inicio = medio + 1;
+		}
+		return respuesta;
+	}
+
+
+
+
+
+	public ArregloDinamico<Comparendo> darComparendosFechaHora(Date fechaHora){
+		ArregloDinamico<Comparendo>lista = copiarComparendos();
+		ArregloDinamico<Comparendo>res =new ArregloDinamico<>(lista.darTamano());
+		Ordenamientos.sortMerge(lista.darElementos(), 0, lista.darTamano()-1, darComparador("Fecha"));
+		int i =0;
+		boolean alto = false; 
+		while(lista.darElemento(i)!=null&&!alto)
+		{
+			if(lista.darElemento(i).darFecha().compareTo(fechaHora)==0){
+				res.agregar(lista.darElemento(i));
+				if(lista.darElemento(i+1).darFecha()!=fechaHora)
+					alto = true;
+			}
+			
+		}
+		Ordenamientos.sortMerge(res.darElementos(), 0, res.darTamano()-1, darComparador("InfraccionInver"));
+		return res;
+	}
+	
+	public ArrayList<ArregloDinamico<Comparendo>> darComparendosDosfechas(Date Fecha1, Date fecha2){
+		ArregloDinamico<Comparendo> lista1 = darComparendosFechaHora(Fecha1);
+		ArregloDinamico<Comparendo> lista2 = darComparendosFechaHora(fecha2);
+		ArrayList<ArregloDinamico<Comparendo>> res = new ArrayList<>();
+		res.add(lista1);
+		res.add(lista2);
+		return res;
+	}
+
 	/**
 	 * Requerimiento eliminar dato
 	 * @param object Dato a eliminar
@@ -156,24 +207,24 @@ public class Modelo
 	public void agregarArregloDinamico(Comparendo comparendo){
 		datos.agregar(comparendo);
 	}
-	public void ordenarShellSort(ArregloDinamico<Comparendo> datos)
+	public void ordenarPorShellSort(ArregloDinamico<Comparendo> datos, Comparator comparador)
 	{
 		// Sort a[] into increasing order.   
-		Ordenamientos.ShellSort(datos.darElementos());
+		Ordenamientos.ShellSort(datos.darElementos(), comparador);
 	}
-	public  void ordenarPorMergeSort(ArregloDinamico<Comparendo> a, int lo, int hi) 
+	public  void ordenarPorMergeSort(ArregloDinamico<Comparendo> a, int lo, int hi, Comparator comparador) 
 	{  // Merge a[lo..mid] with a[mid+1..hi].
-		Ordenamientos.sortMerge(a.darElementos(), lo, hi);
+		Ordenamientos.sortMerge(a.darElementos(), lo, hi, comparador);
 	}
-	public void ordenarPorQuick(ArregloDinamico<Comparendo> datos)
+	public void ordenarPorQuick(ArregloDinamico<Comparendo> datos, Comparator comparador)
 	{
-		Ordenamientos.Quicksort(datos.darElementos());
+		Ordenamientos.Quicksort(datos.darElementos(), comparador);
 	}
 	public ArregloDinamico<Comparendo> copiarComparendos(){
-		ArregloDinamico<Comparendo> arreglonuevo = new ArregloDinamico<>(datos.darTamano());
+		ArregloDinamico<Comparendo> arreglonuevo = new ArregloDinamico<Comparendo>(datos.darTamano());
 		for(int i = 0; i<datos.darTamano(); i++)
 		{
-			arreglonuevo.agregar(datos.darElemento(i));
+			arreglonuevo.darElementos()[i]=(datos.darElemento(i));
 		}
 		return arreglonuevo;
 	}
@@ -233,10 +284,23 @@ public class Modelo
 					return o1.darInfraccion().compareTo(o2.darInfraccion());
 				}
 			};
-		
+
 			return Infraccion;
 		}
-	
+		else if(caracteristicaComparable.equals("InfraccionInver"))
+		{
+
+			Comparator<Comparendo> Infraccion = new Comparator<Comparendo>() 
+			{
+				@Override
+				public int compare(Comparendo o1, Comparendo o2) 
+				{
+					return -(o1.darInfraccion().compareTo(o2.darInfraccion()));
+				}
+			};
+
+			return Infraccion;
+		}
 		else if(caracteristicaComparable.equals("Fecha")){
 
 			Comparator<Comparendo> Fecha = new Comparator<Comparendo>() {

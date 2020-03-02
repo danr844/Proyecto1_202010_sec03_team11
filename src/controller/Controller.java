@@ -1,6 +1,7 @@
 package controller;
 
 import java.text.ParseException;
+import java.util.List;
 import java.util.Scanner;
 
 import com.sun.glass.events.ViewEvent;
@@ -63,8 +64,8 @@ public class Controller {
 
 			case 2:
 				view.printMessage("------------------------------------------------------------------------\n Se esta copiando el arreglo: \n------------------------------------------------------------------------");
-				ArregloDinamico<Comparendo> copiados=modelo.copiarComparendos();
-				int numeroDeDatosCargados=copiados.darTamano();
+				List<Comparendo> copiados=modelo.copiarComparendos();
+				int numeroDeDatosCargados=copiados.size();
 				view.printMessage("Numero de datos de cargados:"+numeroDeDatosCargados +"\n---------------------------");
 
 				break;

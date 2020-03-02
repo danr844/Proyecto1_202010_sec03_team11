@@ -68,6 +68,7 @@ public class Comparendo implements Comparable<Comparendo> {
 			if(this.OBJECT_ID< pComparendo.darID())return -1;
 			else if (this.OBJECT_ID> pComparendo.darID())return 1;
 		}
+
 		return respuesta;
 	}
 
