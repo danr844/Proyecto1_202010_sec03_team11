@@ -98,19 +98,6 @@ public class Modelo
 		return geo;
 	}
 
-	public Comparendo buscarPrimeroPorInfraccion(String pInfraccion)
-	{
-		int i=0;
-		while(i<datos.darTamano())
-		{
-			Comparendo actual= datos.darElemento(i);
-			if(actual.darInfraccion().equals(pInfraccion))
-				return actual;
-
-			i++;
-		}
-		return null;
-	}
 	public ArregloDinamico<Comparendo> comparendosConInfraccion(String pInfraccion)
 	{
 		ArregloDinamico<Comparendo> retorno= new ArregloDinamico<>(0);
@@ -168,21 +155,67 @@ public class Modelo
 		ArregloDinamico<Comparendo>lista = copiarComparendos();
 		ArregloDinamico<Comparendo>res =new ArregloDinamico<>(lista.darTamano());
 		Ordenamientos.sortMerge(lista.darElementos(), 0, lista.darTamano()-1, darComparador("Fecha"));
-		int i =0;
+		int inicio = 0;
+		int fin = lista.darTamano() - 1;
+		
 		boolean alto = false; 
-		while(lista.darElemento(i)!=null&&!alto)
+		while( inicio <= fin && !alto )
 		{
-			if(lista.darElemento(i).darFecha().compareTo(fechaHora)==0){
-				res.agregar(lista.darElemento(i));
-				if(lista.darElemento(i+1).darFecha()!=fechaHora)
-					alto = true;
+			int medio = ( inicio + fin ) / 2;
+			if( lista.darElemento(medio).darFecha().compareTo(fechaHora)==0 )
+			{
+				res.agregar(lista.darElemento(medio)); 
+				alto = true;
 			}
-			
+			else if( lista.darElemento(medio).darFecha().compareTo(fechaHora)>0 )
+				fin = medio - 1;
+			else
+				inicio = medio + 1;
 		}
+		
 		Ordenamientos.sortMerge(res.darElementos(), 0, res.darTamano()-1, darComparador("InfraccionInver"));
 		return res;
 	}
 	
+	public  int firstFecha(ArregloDinamico<Comparendo> arr , int low, int high, Date x, int n) 
+    { 
+		ArregloDinamico<Comparendo>lista = copiarComparendos();
+		Ordenamientos.sortMerge(lista.darElementos(), 0, lista.darTamano()-1, darComparador("Fecha"));
+		
+        if(high >= low) 
+        { 
+            int mid = low + (high - low)/2; 
+            if( ( mid == 0 || x.after(lista.darElemento(mid-1).darFecha())) && x.equals(lista.darElemento(mid).darFecha())) 
+                return mid; 
+             else if(x.after(lista.darElemento(mid).darFecha())) 
+                return firstFecha(lista, (mid + 1), high, x, n ); 
+            else
+                return firstFecha(lista, low, (mid -1), x, n); 
+        } 
+    return -1; 
+    } 
+   //111124544664324798653478643323434565443
+    /* if x is present in arr[] then returns the index of 
+    LAST occurrence of x in arr[0..n-1], otherwise 
+    returns -1 */
+    public  int lastFecha(ArregloDinamico<Comparendo> arr , int low, int high, Date x, int n) 
+    { 
+    	ArregloDinamico<Comparendo>lista = copiarComparendos();
+		Ordenamientos.sortMerge(lista.darElementos(), 0, lista.darTamano()-1, darComparador("Fecha"));
+		
+        if (high >= low) 
+        { 
+            int mid = low + (high - low)/2; 
+            if (( mid == n-1 || x.before(lista.darElemento(mid+1).darFecha()) ) && x.equals(lista.darElemento(mid).darFecha())) 
+                 return mid; 
+            else if (x.before(lista.darElemento(mid).darFecha())) 
+                return lastFecha(lista, low, (mid -1), x, n); 
+            else
+                return lastFecha(lista, (mid + 1), high, x, n); 
+        } 
+    return -1; 
+    } 
+
 	public ArrayList<ArregloDinamico<Comparendo>> darComparendosDosfechas(Date Fecha1, Date fecha2){
 		ArregloDinamico<Comparendo> lista1 = darComparendosFechaHora(Fecha1);
 		ArregloDinamico<Comparendo> lista2 = darComparendosFechaHora(fecha2);
