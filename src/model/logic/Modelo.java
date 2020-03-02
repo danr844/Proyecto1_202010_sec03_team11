@@ -137,7 +137,7 @@ public class Modelo
 		}
 		return retorno;
 	}
-	public Comparendo darComparendoPorInfraccion(String pInfraccion){
+	public Comparendo darPrimerComparendoPorInfraccion(String pInfraccion){
 		ArregloDinamico<Comparendo>lista= copiarComparendos();
 		Comparator<Comparendo> compare = darComparador("Infraccion");
 		Ordenamientos.sortMerge(lista.darElementos(), 0,lista.darTamano()-1, compare);

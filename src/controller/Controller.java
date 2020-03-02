@@ -64,8 +64,8 @@ public class Controller {
 
 			case 2:
 				view.printMessage("------------------------------------------------------------------------\n Se esta copiando el arreglo: \n------------------------------------------------------------------------");
-				List<Comparendo> copiados=modelo.copiarComparendos();
-				int numeroDeDatosCargados=copiados.size();
+				ArregloDinamico<Comparendo> copiados=modelo.copiarComparendos();
+				int numeroDeDatosCargados=copiados.darTamano();
 				view.printMessage("Numero de datos de cargados:"+numeroDeDatosCargados +"\n---------------------------");
 
 				break;
@@ -75,7 +75,7 @@ public class Controller {
 				ArregloDinamico<Comparendo>copia_Comparendos  = modelo.copiarComparendos();
 				long startTime = System.currentTimeMillis(); // medición tiempo actual
 				// solucion Requerimiento 2, 3 o 4
-				modelo.ordenarShellSort( copia_Comparendos );
+				modelo.ordenarPorShellSort( copia_Comparendos, modelo.darComparador("ID") );
 				long endTime = System.currentTimeMillis(); // medición tiempo actual
 				long duration = endTime - startTime; // duracion de ejecucion del algoritmo
 				view.printMessage("Tiempo de ordenamiento: " + duration + " milisegundos");
@@ -104,7 +104,7 @@ public class Controller {
 				view.printMessage("------------------------------------------------------------------------\n Se esta ordenando el arreglo: \n------------------------------------------------------------------------");
 				ArregloDinamico<Comparendo>copia_Comparendos_Merge  = modelo.copiarComparendos();
 				long startTime1 = System.currentTimeMillis(); 
-				modelo.ordenarPorMergeSort(copia_Comparendos_Merge, 0, modelo.copiarComparendos().darTamano()-1);
+				modelo.ordenarPorMergeSort(copia_Comparendos_Merge, 0, modelo.copiarComparendos().darTamano()-1, modelo.darComparador("ID"));
 				long endTime1 = System.currentTimeMillis(); // medición tiempo actual
 				long duration1 = endTime1 - startTime1; // duracion de ejecucion del algoritmo
 				view.printMessage("Tiempo de ordenamiento: " + duration1 + " milisegundos");
@@ -144,7 +144,7 @@ public class Controller {
 				String infracciones=lector.next();
 				view.printMessage("------------------------------------------------------------------------\n Se esta buscando los comparendos: \n------------------------------------------------------------------------");
 				ArregloDinamico<Comparendo> comparendos=modelo.comparendosConInfraccion(infracciones);
-				modelo.ordenarPorMergeSort(comparendos, 0, comparendos.darTamano()-1);
+				modelo.ordenarPorMergeSort(comparendos, 0, comparendos.darTamano()-1, modelo.darComparador("ID"));
 				if(!comparendos.estaVacio())
 				{	
 					view.printMessage("------------------------------------------------------------------------\n Primeros 10 elementos: \n------------------------------------------------------------------------");
@@ -163,18 +163,18 @@ public class Controller {
 				view.printMessage("------------------------------------------------------------------------\n Ingrese el codigo de infraccion de la consulta: \n------------------------------------------------------------------------");
 				String consulta=lector.next();
 				view.printMessage("------------------------------------------------------------------------\n Se esta iniciando la consulta: \n------------------------------------------------------------------------");
-				ArregloDinamico<Comparendo> comparendos=modelo.comparendosConInfraccion(infracciones);
-				modelo.ordenarPorMergeSort(comparendos, 0, comparendos.darTamano()-1);
-				if(!comparendos.estaVacio())
+				ArregloDinamico<Comparendo> comparendos1=modelo.comparendosConInfraccion(infracciones);
+				modelo.ordenarPorMergeSort(comparendos1, 0, comparendos1.darTamano()-1, modelo.darComparador("ID"));
+				if(!comparendos1.estaVacio())
 				{	
 					view.printMessage("------------------------------------------------------------------------\n Primeros 10 elementos: \n------------------------------------------------------------------------");
 
-					for(int i=0; i<comparendos.darTamano()-1; i++)
+					for(int i=0; i<comparendos1.darTamano()-1; i++)
 					{
-						Comparendo actual=comparendos.darElemento(i);
+						Comparendo actual=comparendos1.darElemento(i);
 						view.printMessage(""+ actual.darID()+","+actual.darFecha()+","+ actual.darClaseVehiculo()+","+actual.darTipoServicio()+","+actual.darLocalidad()+"\n---------------------------");
 					}
-					view.printMessage("Total de comparendos de la consulta: "+comparendos.darTamano()+"\n---------------------------");
+					view.printMessage("Total de comparendos de la consulta: "+comparendos1.darTamano()+"\n---------------------------");
 				}
 				else System.out.println("------------------------------------------------------------------------\n No se encontro ningun comparendo con el codigo ingresado------------------------------------------------------------------------\n");
 				break;
