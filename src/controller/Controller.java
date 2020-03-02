@@ -135,7 +135,7 @@ public class Controller {
 				Comparendo comparendo=modelo.buscarPrimeroPorInfraccion(infraccion);
 				if(comparendo!=null)
 				{
-				view.printMessage(""+comparendo.darID()+","+comparendo.darFecha()+","+ comparendo.darClaseVehiculo()+","+comparendo.darTipoServicio()+","+comparendo.darLocalidad()+"\n---------------------------");
+					view.printMessage(""+comparendo.darID()+","+comparendo.darFecha()+","+ comparendo.darClaseVehiculo()+","+comparendo.darTipoServicio()+","+comparendo.darLocalidad()+"\n---------------------------");
 				}
 				else System.out.println("------------------------------------------------------------------------\n No se encontro ningun comparendo con el codigo ingresado------------------------------------------------------------------------\n");
 				break;
@@ -158,27 +158,27 @@ public class Controller {
 				}
 				else System.out.println("------------------------------------------------------------------------\n No se encontro ningun comparendo con el codigo ingresado------------------------------------------------------------------------\n");
 				break;
-				
-			case 7:
-				view.printMessage("------------------------------------------------------------------------\n Ingrese el codigo de infraccion de la consulta: \n------------------------------------------------------------------------");
-				String consulta=lector.next();
-				view.printMessage("------------------------------------------------------------------------\n Se esta iniciando la consulta: \n------------------------------------------------------------------------");
-				ArregloDinamico<Comparendo> comparendos1=modelo.comparendosConInfraccion(infracciones);
-				modelo.ordenarPorMergeSort(comparendos1, 0, comparendos1.darTamano()-1, modelo.darComparador("ID"));
-				if(!comparendos1.estaVacio())
-				{	
-					view.printMessage("------------------------------------------------------------------------\n Primeros 10 elementos: \n------------------------------------------------------------------------");
 
-					for(int i=0; i<comparendos1.darTamano()-1; i++)
-					{
-						Comparendo actual=comparendos1.darElemento(i);
-						view.printMessage(""+ actual.darID()+","+actual.darFecha()+","+ actual.darClaseVehiculo()+","+actual.darTipoServicio()+","+actual.darLocalidad()+"\n---------------------------");
-					}
-					view.printMessage("Total de comparendos de la consulta: "+comparendos1.darTamano()+"\n---------------------------");
-				}
-				else System.out.println("------------------------------------------------------------------------\n No se encontro ningun comparendo con el codigo ingresado------------------------------------------------------------------------\n");
+			case 7:
+				//				view.printMessage("------------------------------------------------------------------------\n Ingrese el codigo de infraccion de la consulta: \n------------------------------------------------------------------------");
+				//				String consulta=lector.next();
+				//				view.printMessage("------------------------------------------------------------------------\n Se esta iniciando la consulta: \n------------------------------------------------------------------------");
+				//				ArregloDinamico<Comparendo> comparendos1=modelo.comparendosConInfraccion(infracciones);
+				//				modelo.ordenarPorMergeSort(comparendos1, 0, comparendos1.darTamano()-1, modelo.darComparador("ID"));
+				//				if(!comparendos1.estaVacio())
+				//				{	
+				//					view.printMessage("------------------------------------------------------------------------\n Primeros 10 elementos: \n------------------------------------------------------------------------");
+				//
+				//					for(int i=0; i<comparendos1.darTamano()-1; i++)
+				//					{
+				//						Comparendo actual=comparendos1.darElemento(i);
+				//						view.printMessage(""+ actual.darID()+","+actual.darFecha()+","+ actual.darClaseVehiculo()+","+actual.darTipoServicio()+","+actual.darLocalidad()+"\n---------------------------");
+				//					}
+				//					view.printMessage("Total de comparendos de la consulta: "+comparendos1.darTamano()+"\n---------------------------");
+				//				}
+				//				else System.out.println("------------------------------------------------------------------------\n No se encontro ningun comparendo con el codigo ingresado------------------------------------------------------------------------\n");
 				break;
-			
+
 			case 8: 
 				view.printMessage("------------------------------------------------------------------------\n Cerrando el programa: \n------------------------------------------------------------------------");
 				lector.close();
