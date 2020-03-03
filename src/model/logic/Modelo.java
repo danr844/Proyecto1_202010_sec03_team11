@@ -100,7 +100,11 @@ public class Modelo
 			System.out.println(Arrays.toString(lista.toArray()));
 			Ordenamientos.sortMerge(datosOrdenadoFecha.darElementos(), darComparador("Fecha"));
 			Ordenamientos.sortMerge(datosOrdenadoInfraccion.darElementos(), darComparador("Infraccion"));
+<<<<<<< HEAD
 			Ordenamientos.sortMerge(datosOrdenadoLocalidad.darElementos(), darComparador("Localidad"));
+=======
+			Ordenamientos.sortMerge(datosOrdenadoLocalidad.darElementos(),darComparador("Localidad"));
+>>>>>>> c233c5b1add453e2d458540827dd207303a32e6f
 
 
 
