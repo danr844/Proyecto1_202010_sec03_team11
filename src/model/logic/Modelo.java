@@ -98,9 +98,9 @@ public class Modelo
 				}
 			}
 			System.out.println(Arrays.toString(lista.toArray()));
-			Ordenamientos.sortMerge(datosOrdenadoFecha.darElementos(), 0, datosOrdenadoFecha.darTamano(), darComparador("Fecha"));
-			Ordenamientos.sortMerge(datosOrdenadoInfraccion.darElementos(), 0, datosOrdenadoInfraccion.darTamano(), darComparador("Infraccion"));
-			Ordenamientos.sortMerge(datosOrdenadoLocalidad.darElementos(), 0, datosOrdenadoLocalidad.darTamano(), darComparador("Localidad"));
+			Ordenamientos.sortMerge(datosOrdenadoFecha.darElementos(), darComparador("Fecha"));
+			Ordenamientos.sortMerge(datosOrdenadoInfraccion.darElementos(), darComparador("Infraccion"));
+			Ordenamientos.sortMerge(datosOrdenadoLocalidad.darElementos(), darComparador("Localidad"));
 
 
 
@@ -159,7 +159,7 @@ public class Modelo
 	public Comparendo darPrimerComparendoPorInfraccion(String pInfraccion){
 		ArregloDinamico<Comparendo>lista= datosOrdenadoInfraccion;
 		Comparator<Comparendo> compare = darComparador("Infraccion");
-		Ordenamientos.sortMerge(lista.darElementos(), 0,lista.darTamano()-1, compare);
+		Ordenamientos.sortMerge(lista.darElementos(), compare);
 		int inicio = 0;
 		int fin = lista.darTamano() - 1;
 		boolean encontre = false;
@@ -200,7 +200,7 @@ public class Modelo
 			}
 
 		}
-		Ordenamientos.sortMerge(res.darElementos(), 0, res.darTamano()-1, darComparador("InfraccionInver"));
+		Ordenamientos.sortMerge(res.darElementos(), darComparador("InfraccionInver"));
 		return res;
 	}
 
@@ -266,9 +266,9 @@ public class Modelo
 		// Sort a[] into increasing order.   
 		Ordenamientos.ShellSort(datos.darElementos(), comparador);
 	}
-	public  void ordenarPorMergeSort(ArregloDinamico<Comparendo> a, int lo, int hi, Comparator comparador) 
+	public  void ordenarPorMergeSort(ArregloDinamico<Comparendo> a, Comparator comparador) 
 	{  // Merge a[lo..mid] with a[mid+1..hi].
-		Ordenamientos.sortMerge(a.darElementos(), lo, hi, comparador);
+		Ordenamientos.sortMerge(a.darElementos(), comparador);
 	}
 	public void ordenarPorQuick(ArregloDinamico<Comparendo> datos, Comparator comparador)
 	{

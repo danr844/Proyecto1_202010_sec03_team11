@@ -3,6 +3,7 @@ package model.data_structures;
 import java.util.Comparator;
 
 public class Ordenamientos {
+	private static Comparable [] aux;
 
 	public   static int partition(Comparable[] a, int lo, int hi, Comparator comparador)
 	{  // Partition into a[lo..i-1], a[i], a[i+1..hi].    
@@ -89,17 +90,23 @@ public class Ordenamientos {
 		// Sort right part a[j+1 .. hi].   
 
 	}
-	public static void sortMerge(Comparable[] a, int lo, int hi, Comparator comparador)   
-	{      
-		// Sort a[lo..hi].
-		 if (hi <= lo) return;
-		 int mid = lo + (hi - lo)/2;
-		 sortQuick(a, lo, mid, comparador); // Sort left half.
-		 sortQuick(a, mid+1, hi, comparador); // Sort right half.
-		 merge(a, lo, mid, hi, comparador); // Merge results   
-
+	public static void sortMerge(Comparable[] a, Comparator comparador)
+	{
+		aux = new Comparable[a.length]; // Allocate space just once.
+		sort(a, 0, a.length - 1, comparador);
 	}
 	
+	public static void sort(Comparable[] a, int lo, int hi, Comparator comparador)   
+	{      
+		// Sort a[lo..hi].
+		if (hi <= lo) return;
+		int mid = lo + (hi - lo)/2;
+		sort(a, lo, mid, comparador); // Sort left half.
+		sort(a, mid+1, hi, comparador); // Sort right half.
+		merge(a, lo, mid, hi, comparador); // Merge results   
+
+	}
+
 
 	private static  void merge(Comparable[] a, int lo, int mid, int hi, Comparator comparador){
 		// Fusionar a[lo..mid] con a[mid+1..hi].
