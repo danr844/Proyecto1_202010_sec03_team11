@@ -76,7 +76,7 @@ public class Ordenamientos {
 	{     
 		shuffle(a);       
 		// Eliminate dependence on input.   
-		sortQuick(a, 0, a.length - 1, comparador);   
+		sortQuick(a, 0, a.length , comparador);   
 	}   
 	private static void sortQuick(Comparable[] a, int lo, int hi, Comparator comparador)   
 	{      

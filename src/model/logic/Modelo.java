@@ -8,7 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -19,10 +19,10 @@ import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
 import model.data_structures.ArregloDinamico;
-import model.data_structures.Comparator;
 import model.data_structures.IArregloDinamico;
 import model.data_structures.Comparendo;
-import model.data_structures.Ordenamientos; 
+import model.data_structures.Ordenamientos;
+import model.data_structures.codigoInfraccion; 
 
 /**
  * Definicion del modelo del mundo
@@ -100,16 +100,85 @@ public class Modelo
 				}
 			}
 			System.out.println(Arrays.toString(lista.toArray()));
-			Ordenamientos.sortMerge(datosOrdenadoFecha.darElementos(), darComparador("Fecha"));
-			Ordenamientos.sortMerge(datosOrdenadoInfraccion.darElementos(), darComparador("Infraccion"));
-			Ordenamientos.sortMerge(datosOrdenadoLocalidad.darElementos(), darComparador("Localidad"));
-
 
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return geo;
+	}
+	public void ordenarArreglos(){
+		Ordenamientos.ShellSort(datosOrdenadoFecha.darElementos(), darComparador("Fecha"));
+		Ordenamientos.ShellSort(datosOrdenadoInfraccion.darElementos(), darComparador("Infraccion"));
+		Ordenamientos.ShellSort(datosOrdenadoLocalidad.darElementos(), darComparador("Localidad"));
+
+
+
+	}
+	public ArregloDinamico<codigoInfraccion> darMayorCantidadInfracciones(Date Fecha1, Date fecha2)
+	{
+		ArregloDinamico<Comparendo>lista = datosOrdenadoInfraccion;
+		ArregloDinamico<codigoInfraccion> res= new ArregloDinamico<>(lista.darTamano());
+		String infraccionActual= "";
+
+		for(int i=0; i<lista.darTamano();i++)
+		{
+			Comparendo act=lista.darElemento(i);
+
+
+			if(infraccionActual.equals(act.darInfraccion()))
+			{
+				if(act.darFecha().after(Fecha1) && act.darFecha().before(fecha2)) 
+				{
+					if(buscarCodigo(infraccionActual, res)!=null)
+					{
+						buscarCodigo(infraccionActual, res).aumentarCantidad();
+					}
+				}
+			}
+
+
+			else
+			{
+				codigoInfraccion nuevo= new codigoInfraccion(act.darInfraccion());
+				infraccionActual=act.darInfraccion();
+				if(act.darFecha().after(Fecha1) && act.darFecha().before(fecha2))
+					nuevo.aumentarCantidad();
+
+				res.agregar(nuevo);
+			}
+			i++;
+		}
+		ordenarPorMergeSortCodigos(res, 0, res.darTamano()-1, darComparadorCodigo("Codigo"));
+		return res;
+
+	}
+public codigoInfraccion buscarCodigo(String pCodigo, ArregloDinamico<codigoInfraccion> lista)
+	{
+		for(int i=0; i<lista.darTamano(); i++)
+		{
+			if(lista.darElemento(i).darCodigo().equals(pCodigo))
+				return lista.darElemento(i);
+		}
+		return null;
+	}
+
+public Comparator<codigoInfraccion> darComparadorCodigo(String caracteristicaComparable){
+	 if(caracteristicaComparable.equals("Codigo"))
+	{
+
+		Comparator<codigoInfraccion> Infraccion = new Comparator<codigoInfraccion>() 
+		{
+			@Override
+			public int compare(codigoInfraccion o1, codigoInfraccion o2) 
+			{
+				return (o1.darCodigo().compareTo(o2.darCodigo()));
+			}
+		};
+
+		return Infraccion;
+	}
+	 else return null;
 	}
 
 	public ArregloDinamico<Comparendo> comparendosConInfraccion(String pInfraccion)
@@ -194,7 +263,6 @@ public class Modelo
 	public Comparendo darPrimerComparendoPorInfraccion(String pInfraccion){
 		ArregloDinamico<Comparendo>lista= datosOrdenadoInfraccion;
 		Comparator<Comparendo> compare = darComparador("Infraccion");
-		Ordenamientos.sortMerge(lista.darElementos(), compare);
 		int inicio = 0;
 		int fin = lista.darTamano() - 1;
 		boolean encontre = false;
@@ -334,12 +402,59 @@ public class Modelo
 		}
 		return null;
 	}
+	public static class compararPorInfraccion implements Comparator<Comparendo>{
 
+		@Override
+		public int compare(Comparendo o1, Comparendo o2) 
+		{
+			return o1.darInfraccion().compareTo(o2.darInfraccion());
+		}
+
+	}
+
+	public static class compararPorFecha implements Comparator<Comparendo>{
+		@Override
+		public int compare(Comparendo o1, Comparendo o2) {
+			return o1.darFecha().compareTo(o2.darFecha());
+
+		}
+
+	}
+
+	public static class compararPorID implements Comparator<Comparendo>{
+		@Override
+		public int compare(Comparendo o1, Comparendo o2) 
+		{
+			if(o1.darID()<o2.darID())return -1;
+			else if (o1.darID()>o2.darID())
+				return 1;
+			return 0;	
+		}
+
+	}
+	public static class compararPorLocalidad implements Comparator<Comparendo>{
+		@Override
+		public int compare(Comparendo o1, Comparendo o2) {
+			return o1.darLocalidad().compareTo(o2.darLocalidad());	
+		}
+
+	}
+	public static class compararPorInfraccionInversa implements Comparator<Comparendo>{
+
+		@Override
+		public int compare(Comparendo o1, Comparendo o2) 
+		{
+			return -(o1.darInfraccion().compareTo(o2.darInfraccion()));
+		}
+
+	}
 	public Comparator<Comparendo> darComparador(String caracteristicaComparable){
 
 		if(caracteristicaComparable.equals("ID"))
 		{
-			Comparator<Comparendo> ID = new Comparator<Comparendo>() {
+
+			Comparator<Comparendo> ID = new Comparator<Comparendo>()
+			{
 				@Override
 				public int compare(Comparendo o1, Comparendo o2) 
 				{
@@ -350,6 +465,7 @@ public class Modelo
 				}
 			};
 			return ID;
+
 		}
 		else if(caracteristicaComparable.equals("Infraccion"))
 		{
@@ -384,8 +500,11 @@ public class Modelo
 			Comparator<Comparendo> Fecha = new Comparator<Comparendo>() {
 				@Override
 				public int compare(Comparendo o1, Comparendo o2) {
+					if(o1!=null&&o2!=null)
 						return o1.darFecha().compareTo(o2.darFecha());
-					
+					else 
+						return 0;
+
 				}
 			};
 			return Fecha;

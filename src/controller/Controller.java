@@ -4,14 +4,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Scanner;
 
-import com.sun.glass.events.ViewEvent;
 
 import model.data_structures.ArregloDinamico;
 import model.data_structures.Comparendo;
-import model.data_structures.Node;
 import model.logic.Modelo;
 import view.View;
 
@@ -69,8 +66,10 @@ public class Controller {
 				view.printMessage("------------------------------------------------------------------------\n Ingrese la Localidad que desea buscar: \n------------------------------------------------------------------------");
 				String pLocalidad = lector.next();
 				Comparendo res = modelo.darPrimerComparendoPorLocalidad(pLocalidad);
-				view.printMessage("El primer Comparendo es: "+ res.darID() +" " + res.darFecha()+ " "+res.darInfraccion()+ " "+ " "+ res.darClaseVehiculo()+" "+res.darTipoServicio()+" "+res.darLocalidad()+ "\n---------------------------");
-
+				if(res == null)
+					view.printMessage(" no existen comparendos con la localidad dada.");
+				else
+					view.printMessage("El primer Comparendo es: "+ res.darID() +" " + res.darFecha()+ " "+res.darInfraccion()+ " "+ " "+ res.darClaseVehiculo()+" "+res.darTipoServicio()+" "+res.darLocalidad()+ "\n---------------------------");
 				break;
 			case 3:
 				view.printMessage("------------------------------------------------------------------------\n Ingrese la fecha que desea usar en el formato yyyy/MM/dd: \n------------------------------------------------------------------------");
@@ -84,7 +83,7 @@ public class Controller {
 					i++;
 				}
 				view.printMessage("el numero total de comparendos para esta fecha es: "+ nuevo.darTamano()  );
-				
+
 				break;
 
 			case 4:
@@ -96,7 +95,7 @@ public class Controller {
 				break;
 
 			case 5:
-				view.printMessage("------------------------------------------------------------------------\n Ingrese la fecha que desea usar en el formato yyyy/MM/dd: \n------------------------------------------------------------------------");
+				view.printMessage("------------------------------------------------------------------------\n Ingrese las fechas que desea usar en el formato yyyy/MM/dd: \n------------------------------------------------------------------------");
 				String fechaS2 = lector.next();
 				SimpleDateFormat parser2 = new SimpleDateFormat("yyyy/MM/dd");
 				Date fecha2 = parser2.parse(fechaS2);
@@ -109,12 +108,12 @@ public class Controller {
 				int j =0;
 				view.printMessage("Infraccion     |"+ fecha2 + "      |"+ fecha3);
 
-//				while(j<nuevo1.size()){
-//					view.printMessage("------------------------------------------------------------------------\n"+nuevo.darElemento(j).darID()+" " +nuevo.darElemento(j).darFecha()+" " +nuevo.darElemento(j).darInfraccion()+" " +nuevo.darElemento(j).darClaseVehiculo()+" " +nuevo.darElemento(j).darTipoServicio()+" " +nuevo.darElemento(j).darLocalidad()+" " +"\n------------------------------------------------------------------------");
-//					j++;
-//				}
-//				view.printMessage("el numero total de comparendos para esta fecha es: "+ nuevo.darTamano()  );
-//				
+				//				while(j<nuevo1.size()){
+				//					view.printMessage("------------------------------------------------------------------------\n"+nuevo.darElemento(j).darID()+" " +nuevo.darElemento(j).darFecha()+" " +nuevo.darElemento(j).darInfraccion()+" " +nuevo.darElemento(j).darClaseVehiculo()+" " +nuevo.darElemento(j).darTipoServicio()+" " +nuevo.darElemento(j).darLocalidad()+" " +"\n------------------------------------------------------------------------");
+				//					j++;
+				//				}
+				//				view.printMessage("el numero total de comparendos para esta fecha es: "+ nuevo.darTamano()  );
+				//				
 				break;
 			case 6:
 				view.printMessage("------------------------------------------------------------------------\n Ingrese la infraccion que desea buscar: \n------------------------------------------------------------------------");
@@ -126,8 +125,8 @@ public class Controller {
 					w++;
 				}
 				view.printMessage("el numero total de comparendos para esta fecha es: "+ nuevo2.darTamano()  );
-				
-				
+
+
 				break;
 
 			case 7:
