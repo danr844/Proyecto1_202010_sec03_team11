@@ -88,7 +88,7 @@ public class Ordenamientos {
 		// Sort left part a[lo .. j-1].      
 		sortQuick(a, j+1, hi, comparador);              
 		// Sort right part a[j+1 .. hi].   
-
+//m
 	}
 	public static void sortMerge2( ArregloDinamico<codigoInfraccion>b, Comparator comparador)
 	{

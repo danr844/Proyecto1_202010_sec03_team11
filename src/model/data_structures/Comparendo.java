@@ -13,7 +13,7 @@ public class Comparendo implements Comparable<Comparendo> {
 	private String MEDIO;
 	private Comparendo siguiente;
 
-
+//m
 
 	public Comparendo (int pOBJECT_ID, Date pFECHA_HORA, String pMedioDeteccion, String pClasevehiculo,String pTIPO_SERVICIO, String pInfraccion, String pDescInfraccion,  String pLOCALIDAD)
 	{

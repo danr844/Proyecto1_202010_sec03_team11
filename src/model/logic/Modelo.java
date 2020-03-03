@@ -280,7 +280,7 @@ public class Modelo
 
 
 
-
+//,
 
 	public ArregloDinamico<Comparendo> darComparendosFechaHora(Date fechaHora){
 		ArregloDinamico<Comparendo>lista = datosOrdenadoFecha;
