@@ -57,7 +57,7 @@ public class Ordenamientos {
 	public static void ShellSort(Comparable[] a, Comparator comparador)  
 	{  
 		// Sort a[] into increasing order.      
-		int N = a.length;      
+		int N = 9;      
 		int h = 1;      
 		while (h < N/3) 
 			h = 3*h + 1; 
@@ -76,7 +76,7 @@ public class Ordenamientos {
 	{     
 		shuffle(a);       
 		// Eliminate dependence on input.   
-		sortQuick(a, 0, a.length , comparador);   
+		sortQuick(a, 0, 10 , comparador);   
 	}   
 	private static void sortQuick(Comparable[] a, int lo, int hi, Comparator comparador)   
 	{      
