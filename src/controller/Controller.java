@@ -1,6 +1,9 @@
 package controller;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -30,7 +33,7 @@ public class Controller {
 		modelo = new Modelo(10000);
 	}
 
-	public void run() 
+	public void run() throws ParseException 
 	{
 		Scanner lector = new Scanner(System.in);
 		boolean fin = false;
@@ -63,120 +66,77 @@ public class Controller {
 				break;
 
 			case 2:
-				view.printMessage("------------------------------------------------------------------------\n Se esta copiando el arreglo: \n------------------------------------------------------------------------");
-				ArregloDinamico<Comparendo> copiados=modelo.copiarComparendos();
-				int numeroDeDatosCargados=copiados.darTamano();
-				view.printMessage("Numero de datos de cargados:"+numeroDeDatosCargados +"\n---------------------------");
+				view.printMessage("------------------------------------------------------------------------\n Ingrese la Localidad que desea buscar: \n------------------------------------------------------------------------");
+				String pLocalidad = lector.next();
+				Comparendo res = modelo.darPrimerComparendoPorLocalidad(pLocalidad);
+				view.printMessage("El primer Comparendo es: "+ res.darID() +" " + res.darFecha()+ " "+res.darInfraccion()+ " "+ " "+ res.darClaseVehiculo()+" "+res.darTipoServicio()+" "+res.darLocalidad()+ "\n---------------------------");
 
 				break;
 			case 3:
-				view.printMessage("------------------------------------------------------------------------\n Se esta ordenando el arreglo: \n------------------------------------------------------------------------");
-				// Copiar los comparendos originales en un arreglo de objetos Comparables – Requerimiento 1
-				ArregloDinamico<Comparendo>copia_Comparendos  = modelo.copiarComparendos();
-				long startTime = System.currentTimeMillis(); // medición tiempo actual
-				// solucion Requerimiento 2, 3 o 4
-				modelo.ordenarPorShellSort( copia_Comparendos, modelo.darComparador("ID") );
-				long endTime = System.currentTimeMillis(); // medición tiempo actual
-				long duration = endTime - startTime; // duracion de ejecucion del algoritmo
-				view.printMessage("Tiempo de ordenamiento: " + duration + " milisegundos");
-				view.printMessage("------------------------------------------------------------------------\n Primeros 10 elementos: \n------------------------------------------------------------------------");
-
-				for(int i=0; i<10; i++)
-				{
-					Comparendo actual=copia_Comparendos.darElemento(i);
-					view.printMessage(""+ actual.darID()+","+actual.darFecha()+","+ actual.darClaseVehiculo()+","+actual.darTipoServicio()+","+actual.darLocalidad()+"\n---------------------------");
+				view.printMessage("------------------------------------------------------------------------\n Ingrese la fecha que desea usar en el formato yyyy/MM/dd: \n------------------------------------------------------------------------");
+				String fechaS = lector.next();
+				SimpleDateFormat parser = new SimpleDateFormat("yyyy/MM/dd");
+				Date fecha = parser.parse(fechaS);
+				ArregloDinamico<Comparendo> nuevo = modelo.darComparendosFechaHora(fecha);
+				int i =0;
+				while(i<nuevo.darTamano()){
+					view.printMessage("------------------------------------------------------------------------\n"+nuevo.darElemento(i).darID()+" " +nuevo.darElemento(i).darFecha()+" " +nuevo.darElemento(i).darInfraccion()+" " +nuevo.darElemento(i).darClaseVehiculo()+" " +nuevo.darElemento(i).darTipoServicio()+" " +nuevo.darElemento(i).darLocalidad()+" " +"\n------------------------------------------------------------------------");
+					i++;
 				}
-				view.printMessage("------------------------------------------------------------------------\n Ultimos 10 elementos: \n------------------------------------------------------------------------");
-
-				for(int i=1; i<11; i++)
-				{
-					Comparendo actual=copia_Comparendos.darElemento(copia_Comparendos.darTamano()-i);
-					view.printMessage(""+ actual.darID()+","+actual.darFecha()+","+ actual.darClaseVehiculo()+","+actual.darTipoServicio()+","+actual.darLocalidad()+"\n---------------------------");
-				}
-				// mostrar los resultados del algoritmo xxxxxSort que quedaron en el arreglo
-				// copia_Comparendos: los 10 primeros y los 10 últimos comparendos resultantes
-				view.printMessage("------------------------------------------------------------------------");
-
+				view.printMessage("el numero total de comparendos para esta fecha es: "+ nuevo.darTamano()  );
+				
 				break;
 
 			case 4:
 
-				view.printMessage("------------------------------------------------------------------------\n Se esta ordenando el arreglo: \n------------------------------------------------------------------------");
-				ArregloDinamico<Comparendo>copia_Comparendos_Merge  = modelo.copiarComparendos();
-				long startTime1 = System.currentTimeMillis(); 
-				modelo.ordenarPorMergeSort(copia_Comparendos_Merge, 0, modelo.copiarComparendos().darTamano()-1, modelo.darComparador("ID"));
-				long endTime1 = System.currentTimeMillis(); // medición tiempo actual
-				long duration1 = endTime1 - startTime1; // duracion de ejecucion del algoritmo
-				view.printMessage("Tiempo de ordenamiento: " + duration1 + " milisegundos");
-
-				view.printMessage("------------------------------------------------------------------------\n Primeros 10 elementos: \n------------------------------------------------------------------------");
-
-				for(int i=0; i<10; i++)
-				{
-					Comparendo actual=copia_Comparendos_Merge.darElemento(i);
-					view.printMessage(""+ actual.darID()+","+actual.darFecha()+","+ actual.darClaseVehiculo()+","+actual.darTipoServicio()+","+actual.darLocalidad()+"\n---------------------------");
-				}
-				view.printMessage("------------------------------------------------------------------------\n Ultimos 10 elementos: \n------------------------------------------------------------------------");
-
-				for(int i=1; i<11; i++)
-				{
-					Comparendo actual=copia_Comparendos_Merge.darElemento(copia_Comparendos_Merge.darTamano()-i);
-					view.printMessage(""+ actual.darID()+","+actual.darFecha()+","+ actual.darClaseVehiculo()+","+actual.darTipoServicio()+","+actual.darLocalidad()+"\n---------------------------");
-				}
-				// mostrar los resultados del algoritmo xxxxxSort que quedaron en el arreglo
-				// copia_Comparendos: los 10 primeros y los 10 últimos comparendos resultantes
-				view.printMessage("------------------------------------------------------------------------");
+				view.printMessage("------------------------------------------------------------------------\n Ingrese la infraccion que desea buscar: \n------------------------------------------------------------------------");
+				String pInfraccion = lector.next();
+				Comparendo res1 = modelo.darPrimerComparendoPorInfraccion(pInfraccion);
+				view.printMessage("El primer Comparendo es: "+ res1.darID() +" " + res1.darFecha()+ " "+res1.darInfraccion()+ " "+ " "+ res1.darClaseVehiculo()+" "+res1.darTipoServicio()+" "+res1.darLocalidad()+ "\n---------------------------");
 				break;
 
 			case 5:
-				view.printMessage("------------------------------------------------------------------------\n Ingrese el codigo de infraccion del comparendo: \n------------------------------------------------------------------------");
-				String infraccion=lector.next();
-				view.printMessage("------------------------------------------------------------------------\n Se esta buscando el comparendo: \n------------------------------------------------------------------------");
-				Comparendo comparendo=modelo.buscarPrimeroPorInfraccion(infraccion);
-				if(comparendo!=null)
-				{
-					view.printMessage(""+comparendo.darID()+","+comparendo.darFecha()+","+ comparendo.darClaseVehiculo()+","+comparendo.darTipoServicio()+","+comparendo.darLocalidad()+"\n---------------------------");
-				}
-				else System.out.println("------------------------------------------------------------------------\n No se encontro ningun comparendo con el codigo ingresado------------------------------------------------------------------------\n");
+				view.printMessage("------------------------------------------------------------------------\n Ingrese la fecha que desea usar en el formato yyyy/MM/dd: \n------------------------------------------------------------------------");
+				String fechaS2 = lector.next();
+				SimpleDateFormat parser2 = new SimpleDateFormat("yyyy/MM/dd");
+				Date fecha2 = parser2.parse(fechaS2);
+				String fechaS3 = lector.next();
+				SimpleDateFormat parser3 = new SimpleDateFormat("yyyy/MM/dd");
+				Date fecha3 = parser3.parse(fechaS3);
+				ArrayList<ArregloDinamico<Comparendo>> nuevo1 = modelo.darComparendosDosfechas(fecha2, fecha3);
+				ArregloDinamico<Comparendo> datosFecha1 = nuevo1.get(0);
+				ArregloDinamico<Comparendo> datosfecha2 = nuevo1.get(1);
+				int j =0;
+				view.printMessage("Infraccion     |"+ fecha2 + "      |"+ fecha3);
+
+//				while(j<nuevo1.size()){
+//					view.printMessage("------------------------------------------------------------------------\n"+nuevo.darElemento(j).darID()+" " +nuevo.darElemento(j).darFecha()+" " +nuevo.darElemento(j).darInfraccion()+" " +nuevo.darElemento(j).darClaseVehiculo()+" " +nuevo.darElemento(j).darTipoServicio()+" " +nuevo.darElemento(j).darLocalidad()+" " +"\n------------------------------------------------------------------------");
+//					j++;
+//				}
+//				view.printMessage("el numero total de comparendos para esta fecha es: "+ nuevo.darTamano()  );
+//				
 				break;
 			case 6:
-				view.printMessage("------------------------------------------------------------------------\n Ingrese el codigo de infraccion de la lista de comparendos: \n------------------------------------------------------------------------");
-				String infracciones=lector.next();
-				view.printMessage("------------------------------------------------------------------------\n Se esta buscando los comparendos: \n------------------------------------------------------------------------");
-				ArregloDinamico<Comparendo> comparendos=modelo.comparendosConInfraccion(infracciones);
-				modelo.ordenarPorMergeSort(comparendos, 0, comparendos.darTamano()-1, modelo.darComparador("ID"));
-				if(!comparendos.estaVacio())
-				{	
-					view.printMessage("------------------------------------------------------------------------\n Primeros 10 elementos: \n------------------------------------------------------------------------");
-
-					for(int i=0; i<comparendos.darTamano()-1; i++)
-					{
-						Comparendo actual=comparendos.darElemento(i);
-						view.printMessage(""+ actual.darID()+","+actual.darFecha()+","+ actual.darClaseVehiculo()+","+actual.darTipoServicio()+","+actual.darLocalidad()+"\n---------------------------");
-					}
-					view.printMessage("Total de comparendos de la consulta: "+comparendos.darTamano()+"\n---------------------------");
+				view.printMessage("------------------------------------------------------------------------\n Ingrese la infraccion que desea buscar: \n------------------------------------------------------------------------");
+				String ifraccion2 = lector.next();
+				ArregloDinamico<Comparendo> nuevo2 = modelo.comparendosConInfraccion(ifraccion2);
+				int w =0;
+				while(w<nuevo2.darTamano()){
+					view.printMessage("------------------------------------------------------------------------\n"+nuevo2.darElemento(w).darID()+" " +nuevo2.darElemento(w).darFecha()+" " +nuevo2.darElemento(w).darInfraccion()+" " +nuevo2.darElemento(w).darClaseVehiculo()+" " +nuevo2.darElemento(w).darTipoServicio()+" " +nuevo2.darElemento(w).darLocalidad()+" " +"\n------------------------------------------------------------------------");
+					w++;
 				}
-				else System.out.println("------------------------------------------------------------------------\n No se encontro ningun comparendo con el codigo ingresado------------------------------------------------------------------------\n");
+				view.printMessage("el numero total de comparendos para esta fecha es: "+ nuevo2.darTamano()  );
+				
+				
 				break;
 
 			case 7:
-				//				view.printMessage("------------------------------------------------------------------------\n Ingrese el codigo de infraccion de la consulta: \n------------------------------------------------------------------------");
-				//				String consulta=lector.next();
-				//				view.printMessage("------------------------------------------------------------------------\n Se esta iniciando la consulta: \n------------------------------------------------------------------------");
-				//				ArregloDinamico<Comparendo> comparendos1=modelo.comparendosConInfraccion(infracciones);
-				//				modelo.ordenarPorMergeSort(comparendos1, 0, comparendos1.darTamano()-1, modelo.darComparador("ID"));
-				//				if(!comparendos1.estaVacio())
-				//				{	
-				//					view.printMessage("------------------------------------------------------------------------\n Primeros 10 elementos: \n------------------------------------------------------------------------");
-				//
-				//					for(int i=0; i<comparendos1.darTamano()-1; i++)
-				//					{
-				//						Comparendo actual=comparendos1.darElemento(i);
-				//						view.printMessage(""+ actual.darID()+","+actual.darFecha()+","+ actual.darClaseVehiculo()+","+actual.darTipoServicio()+","+actual.darLocalidad()+"\n---------------------------");
-				//					}
-				//					view.printMessage("Total de comparendos de la consulta: "+comparendos1.darTamano()+"\n---------------------------");
-				//				}
-				//				else System.out.println("------------------------------------------------------------------------\n No se encontro ningun comparendo con el codigo ingresado------------------------------------------------------------------------\n");
+				String[]tabla = modelo.darComparendosInfraccionesPublico().split(";");
+				int y =0;
+				while(y<tabla.length){
+					view.printMessage(tabla[y]);
+					y++;
+				}
 				break;
 
 			case 8: 

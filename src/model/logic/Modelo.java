@@ -8,7 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
+
 import java.util.Date;
 import java.util.List;
 
@@ -19,6 +19,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
 import model.data_structures.ArregloDinamico;
+import model.data_structures.Comparator;
 import model.data_structures.IArregloDinamico;
 import model.data_structures.Comparendo;
 import model.data_structures.Ordenamientos; 
@@ -46,8 +47,9 @@ public class Modelo
 	public Modelo(int capacidad)
 	{
 		datosOriginal = new ArregloDinamico<Comparendo>(capacidad);
-		datosOrdenadoFecha = new ArregloDinamico<>(capacidad);
-		datosOrdenadoLocalidad = new ArregloDinamico<>(capacidad);
+		datosOrdenadoFecha = new ArregloDinamico<Comparendo>(capacidad);
+		datosOrdenadoInfraccion=new ArregloDinamico<Comparendo>(capacidad);
+		datosOrdenadoLocalidad = new ArregloDinamico<Comparendo>(capacidad);
 
 	}
 	public static  boolean   less(Comparendo a, Comparendo a2, Comparator comparador)  
@@ -60,7 +62,7 @@ public class Modelo
 		List<Double> geo = new ArrayList<Double>();
 
 		try {
-////// tesing
+			////// tesing
 			Gson gson = new Gson();
 
 			String path = "./data/comparendos_dei_2018_small.geojson";
@@ -123,6 +125,39 @@ public class Modelo
 		}
 		return retorno;
 	}
+	public String darComparendosInfraccionesPublico()
+	{
+		ArregloDinamico<Comparendo>lista = datosOrdenadoInfraccion;
+		int publico=0;
+		int privado=0;
+		String infraccionActual= "";
+		String res="Infraccion | Particular | Publico";
+		for(int i=0; i<lista.darTamano(); i++)
+		{
+			Comparendo act=lista.darElemento(i);
+			if(infraccionActual.equals(act.darInfraccion()))
+			{
+				if(act.darTipoServicio().equals("Público"))
+					publico++;
+				else if(act.darTipoServicio().equals("Privado"))
+					privado++;
+			}
+			else
+			{
+				if(publico!=0 && privado!=0)
+				{
+					res+= infraccionActual+" | "+publico+" | "+privado+";";
+					infraccionActual=act.darInfraccion();
+				}
+				infraccionActual=act.darInfraccion();
+				privado=1;
+				publico=1;
+			}
+			i++;
+		}
+		return res;
+
+	}
 
 	public int consultarNumeroComparendosPorInfraccionTipo(String pInfraccion, String pTipo)
 	{
@@ -179,11 +214,11 @@ public class Modelo
 		return respuesta;
 	}
 
-	
 
 
 
-	
+
+
 	public ArregloDinamico<Comparendo> darComparendosFechaHora(Date fechaHora){
 		ArregloDinamico<Comparendo>lista = datosOrdenadoFecha;
 		ArregloDinamico<Comparendo>res =new ArregloDinamico<>(lista.darTamano());
@@ -204,38 +239,38 @@ public class Modelo
 		return res;
 	}
 
-	
+
 	public  int firstFecha(ArregloDinamico<Comparendo> arr , int low, int high, Date x, int n) 
-    { 
-	
-        if(high >= low) 
-        { 
-            int mid = low + (high - low)/2; 
-            if( ( mid == 0 || x.after(arr.darElemento(mid-1).darFecha())) && x.equals(arr.darElemento(mid).darFecha())) 
-                return mid; 
-             else if(x.after(arr.darElemento(mid).darFecha())) 
-                return firstFecha(arr, (mid + 1), high, x, n ); 
-            else
-                return firstFecha(arr, low, (mid -1), x, n); 
-        } 
-    return -1; 
-    } 
-   
-    public  int lastFecha(ArregloDinamico<Comparendo> arr , int low, int high, Date x, int n) 
-    { 
-    	
-        if (high >= low) 
-        { 
-            int mid = low + (high - low)/2; 
-            if (( mid == n-1 || x.before(arr.darElemento(mid+1).darFecha()) ) && x.equals(arr.darElemento(mid).darFecha())) 
-                 return mid; 
-            else if (x.before(arr.darElemento(mid).darFecha())) 
-                return lastFecha(arr, low, (mid -1), x, n); 
-            else
-                return lastFecha(arr, (mid + 1), high, x, n); 
-        } 
-    return -1; 
-    } 
+	{ 
+
+		if(high >= low) 
+		{ 
+			int mid = low + (high - low)/2; 
+			if( ( mid == 0 || x.after(arr.darElemento(mid-1).darFecha())) && x.equals(arr.darElemento(mid).darFecha())) 
+				return mid; 
+			else if(x.after(arr.darElemento(mid).darFecha())) 
+				return firstFecha(arr, (mid + 1), high, x, n ); 
+			else
+				return firstFecha(arr, low, (mid -1), x, n); 
+		} 
+		return -1; 
+	} 
+
+	public  int lastFecha(ArregloDinamico<Comparendo> arr , int low, int high, Date x, int n) 
+	{ 
+
+		if (high >= low) 
+		{ 
+			int mid = low + (high - low)/2; 
+			if (( mid == n-1 || x.before(arr.darElemento(mid+1).darFecha()) ) && x.equals(arr.darElemento(mid).darFecha())) 
+				return mid; 
+			else if (x.before(arr.darElemento(mid).darFecha())) 
+				return lastFecha(arr, low, (mid -1), x, n); 
+			else
+				return lastFecha(arr, (mid + 1), high, x, n); 
+		} 
+		return -1; 
+	} 
 
 	public ArrayList<ArregloDinamico<Comparendo>> darComparendosDosfechas(Date Fecha1, Date fecha2){
 		ArregloDinamico<Comparendo> lista1 = darComparendosFechaHora(Fecha1);
@@ -349,7 +384,8 @@ public class Modelo
 			Comparator<Comparendo> Fecha = new Comparator<Comparendo>() {
 				@Override
 				public int compare(Comparendo o1, Comparendo o2) {
-					return o1.darFecha().compareTo(o2.darFecha());	
+						return o1.darFecha().compareTo(o2.darFecha());
+					
 				}
 			};
 			return Fecha;
