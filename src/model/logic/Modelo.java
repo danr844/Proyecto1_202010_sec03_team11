@@ -50,7 +50,7 @@ public class Modelo
 		datosOrdenadoFecha = new ArregloDinamico<Comparendo>(capacidad);
 		datosOrdenadoInfraccion = new ArregloDinamico<Comparendo>(capacidad);
 		datosOrdenadoLocalidad = new ArregloDinamico<Comparendo>(capacidad);
-		
+
 	}
 	public static  boolean   less(Comparendo a, Comparendo a2, Comparator comparador)  
 	{  
@@ -149,7 +149,7 @@ public class Modelo
 		return res;
 
 	}
-public codigoInfraccion buscarCodigo(String pCodigo, ArregloDinamico<codigoInfraccion> lista)
+	public codigoInfraccion buscarCodigo(String pCodigo, ArregloDinamico<codigoInfraccion> lista)
 	{
 		for(int i=0; i<lista.darTamano(); i++)
 		{
@@ -159,22 +159,22 @@ public codigoInfraccion buscarCodigo(String pCodigo, ArregloDinamico<codigoInfra
 		return null;
 	}
 
-public Comparator<codigoInfraccion> darComparadorCodigo(String caracteristicaComparable){
-	 if(caracteristicaComparable.equals("Codigo"))
-	{
-
-		Comparator<codigoInfraccion> Infraccion = new Comparator<codigoInfraccion>() 
+	public Comparator<codigoInfraccion> darComparadorCodigo(String caracteristicaComparable){
+		if(caracteristicaComparable.equals("Codigo"))
 		{
-			@Override
-			public int compare(codigoInfraccion o1, codigoInfraccion o2) 
-			{
-				return (o1.darCodigo().compareTo(o2.darCodigo()));
-			}
-		};
 
-		return Infraccion;
-	}
-	 else return null;
+			Comparator<codigoInfraccion> Infraccion = new Comparator<codigoInfraccion>() 
+			{
+				@Override
+				public int compare(codigoInfraccion o1, codigoInfraccion o2) 
+				{
+					return (o1.darCodigo().compareTo(o2.darCodigo()));
+				}
+			};
+
+			return Infraccion;
+		}
+		else return null;
 	}
 
 	public ArregloDinamico<Comparendo> comparendosConInfraccion(String pInfraccion)
@@ -287,55 +287,71 @@ public Comparator<codigoInfraccion> darComparadorCodigo(String caracteristicaCom
 	public ArregloDinamico<Comparendo> darComparendosFechaHora(Date fechaHora){
 		ArregloDinamico<Comparendo>lista = datosOrdenadoFecha;
 		ArregloDinamico<Comparendo>res =new ArregloDinamico<>(lista.darTamano());
-		int i =0;
-		boolean alto = false; 
-		int y =0;
-
-		while(lista.darElemento(i)!=null&&!alto)
+		int indexinicio = findFirstAndLast(lista, fechaHora)[0];
+		int indexFin = findFirstAndLast(lista, fechaHora)[1];
+System.out.println(indexFin);
+System.out.println(indexinicio);
+		while(indexinicio<=indexFin&&indexinicio!=666)
 		{
-			if(lista.darElemento(i).darFecha().compareTo(fechaHora)==0){
-				res.agregar(lista.darElemento(i));
-				if(lista.darElemento(i+1).darFecha()!=fechaHora)
-					alto = true;
-			}
-
+			Comparendo act = lista.darElemento(indexFin);
+			res.agregar(lista.darElemento(indexinicio));
+			indexinicio++;
 		}
 		Ordenamientos.sortMerge(res, darComparador("InfraccionInver"));
 		return res;
 	}
-
-
-	public  int firstFecha(ArregloDinamico<Comparendo> arr , int low, int high, Date x, int n) 
+	public int[] findFirstAndLast(ArregloDinamico<Comparendo> a, Date x) 
 	{ 
-
-		if(high >= low) 
+		int res[] = new int[2];
+		int n = a.darTamano(); 
+		int first = -1, last = -1; 
+		for (int i = 0; i < n; i++) 
 		{ 
-			int mid = low + (high - low)/2; 
-			if( ( mid == 0 || x.after(arr.darElemento(mid-1).darFecha())) && x.equals(arr.darElemento(mid).darFecha())) 
-				return mid; 
-			else if(x.after(arr.darElemento(mid).darFecha())) 
-				return firstFecha(arr, (mid + 1), high, x, n ); 
-			else
-				return firstFecha(arr, low, (mid -1), x, n); 
+			if (x.compareTo(a.darElemento(i).darFecha())!=0) 
+				continue; 
+			if (first == -1) 
+				first = i; 
+			last = i; 
 		} 
-		return -1; 
-	} 
-
-	public  int lastFecha(ArregloDinamico<Comparendo> arr , int low, int high, Date x, int n) 
-	{ 
-
-		if (high >= low) 
-		{ 
-			int mid = low + (high - low)/2; 
-			if (( mid == n-1 || x.before(arr.darElemento(mid+1).darFecha()) ) && x.equals(arr.darElemento(mid).darFecha())) 
-				return mid; 
-			else if (x.before(arr.darElemento(mid).darFecha())) 
-				return lastFecha(arr, low, (mid -1), x, n); 
-			else
-				return lastFecha(arr, (mid + 1), high, x, n); 
+		if (first != -1){ 
+			res[0]=first;
+			res[1]=last;
 		} 
-		return -1; 
-	} 
+		else
+			res[0]=666;
+		return res;
+	}   
+	//	int firstFecha(ArregloDinamico<Comparendo> arr , int low, int high, Date x,int n) 
+	//	{ 
+	//
+	//		if(high >= low) 
+	//		{ 
+	//			int mid = low + (high - low)/2; 
+	//			if( ( mid == 0 || x.after(arr.darElemento(mid-1).darFecha())) && x.equals(arr.darElemento(mid).darFecha())) 
+	//				return mid; 
+	//			else if(x.after(arr.darElemento(mid).darFecha())) 
+	//				return firstFecha(arr, (mid + 1), high, x , n); 
+	//			else
+	//				return firstFecha(arr, low, (mid -1), x, n); 
+	//		} 
+	//		return -1; 
+	//	} 
+	//
+	//	public  int lastFecha(ArregloDinamico<Comparendo> arr , int low, int high, Date x, int n) 
+	//	{ 
+	//
+	//		if (high >= low) 
+	//		{ 
+	//			int mid = low + (high - low)/2; 
+	//			if (( mid == n-1 || x.before(arr.darElemento(mid+1).darFecha()) ) && x.equals(arr.darElemento(mid).darFecha())) 
+	//				return mid; 
+	//			else if (x.before(arr.darElemento(mid).darFecha())) 
+	//				return lastFecha(arr, low, (mid -1), x,n); 
+	//			else
+	//				return lastFecha(arr, (mid + 1), high, x,n); 
+	//		} 
+	//		return -1; 
+	//	} 
 
 	public ArrayList<ArregloDinamico<Comparendo>> darComparendosDosfechas(Date Fecha1, Date fecha2){
 		ArregloDinamico<Comparendo> lista1 = darComparendosFechaHora(Fecha1);
@@ -399,7 +415,7 @@ public Comparator<codigoInfraccion> darComparadorCodigo(String caracteristicaCom
 		}
 		return null;
 	}
-	
+
 	public Comparator<Comparendo> darComparador(String caracteristicaComparable){
 
 		if(caracteristicaComparable.equals("ID"))
