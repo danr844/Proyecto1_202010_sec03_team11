@@ -104,6 +104,8 @@ public class Modelo
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		ordenarArreglos();
+
 		return geo;
 	}
 	public void ordenarArreglos(){
@@ -238,7 +240,6 @@ public class Modelo
 	}
 	public Comparendo darPrimerComparendoPorLocalidad(String pLocalidad){
 		ArregloDinamico<Comparendo>lista= datosOrdenadoLocalidad;
-		ordenarArreglos();
 		int inicio = 0;
 		int fin = lista.darTamano() - 1;
 		boolean encontre = false;
@@ -259,17 +260,14 @@ public class Modelo
 	}
 	public Comparendo darPrimerComparendoPorInfraccion(String pInfraccion){
 		ArregloDinamico<Comparendo>lista= datosOrdenadoInfraccion;
-		Comparator<Comparendo> compare = darComparador("Infraccion");
 		int inicio = 0;
 		int fin = lista.darTamano() - 1;
-		boolean encontre = false;
 		Comparendo respuesta=null;
-		while( inicio <= fin && !encontre )
+		while( inicio <= fin && respuesta==null )
 		{
 			int medio = ( inicio + fin ) / 2;
 			if( lista.darElemento(medio).darInfraccion().compareToIgnoreCase(pInfraccion)==0 ){
 				respuesta = lista.darElemento(medio);
-				encontre = true;
 			}
 			else if( lista.darElemento(medio).darInfraccion().compareToIgnoreCase(pInfraccion)>0 )
 				fin = medio - 1;
@@ -289,11 +287,8 @@ public class Modelo
 		ArregloDinamico<Comparendo>res =new ArregloDinamico<>(lista.darTamano());
 		int indexinicio = findFirstAndLast(lista, fechaHora)[0];
 		int indexFin = findFirstAndLast(lista, fechaHora)[1];
-System.out.println(indexFin);
-System.out.println(indexinicio);
 		while(indexinicio<=indexFin&&indexinicio!=666)
 		{
-			Comparendo act = lista.darElemento(indexFin);
 			res.agregar(lista.darElemento(indexinicio));
 			indexinicio++;
 		}

@@ -91,7 +91,10 @@ public class Controller {
 				view.printMessage("------------------------------------------------------------------------\n Ingrese la infraccion que desea buscar: \n------------------------------------------------------------------------");
 				String pInfraccion = lector.next();
 				Comparendo res1 = modelo.darPrimerComparendoPorInfraccion(pInfraccion);
+				if(res1!=null)
 				view.printMessage("El primer Comparendo es: "+ res1.darID() +" " + res1.darFecha()+ " "+res1.darInfraccion()+ " "+ " "+ res1.darClaseVehiculo()+" "+res1.darTipoServicio()+" "+res1.darLocalidad()+ "\n---------------------------");
+				else
+					view.printMessage("No se encontro un comparendo con la infraccion dada");
 				break;
 
 			case 5:
