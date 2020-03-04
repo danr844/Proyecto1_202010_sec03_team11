@@ -48,9 +48,9 @@ public class Modelo
 	{
 		datosOriginal = new ArregloDinamico<Comparendo>(capacidad);
 		datosOrdenadoFecha = new ArregloDinamico<Comparendo>(capacidad);
-		datosOrdenadoInfraccion=new ArregloDinamico<Comparendo>(capacidad);
+		datosOrdenadoInfraccion = new ArregloDinamico<Comparendo>(capacidad);
 		datosOrdenadoLocalidad = new ArregloDinamico<Comparendo>(capacidad);
-
+		
 	}
 	public static  boolean   less(Comparendo a, Comparendo a2, Comparator comparador)  
 	{  
@@ -101,19 +101,15 @@ public class Modelo
 			}
 			System.out.println(Arrays.toString(lista.toArray()));
 
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return geo;
 	}
 	public void ordenarArreglos(){
-		Ordenamientos.ShellSort(datosOrdenadoFecha.darElementos(), darComparador("Fecha"));
-		Ordenamientos.ShellSort(datosOrdenadoInfraccion.darElementos(), darComparador("Infraccion"));
-		Ordenamientos.ShellSort(datosOrdenadoLocalidad.darElementos(), darComparador("Localidad"));
-
-
-
+		Ordenamientos.sortMerge(datosOrdenadoFecha, darComparador("Fecha"));
+		Ordenamientos.sortMerge(datosOrdenadoInfraccion, darComparador("Infraccion"));
+		Ordenamientos.sortMerge(datosOrdenadoLocalidad, darComparador("Localidad"));
 	}
 	public ArregloDinamico<codigoInfraccion> darMayorCantidadInfracciones(Date Fecha1, Date fecha2)
 	{
@@ -149,7 +145,7 @@ public class Modelo
 			}
 			i++;
 		}
-		ordenarPorMergeSortCodigos(res, 0, res.darTamano()-1, darComparadorCodigo("Codigo"));
+		Ordenamientos.sortMerge2(res, darComparadorCodigo("Codigo"));
 		return res;
 
 	}
@@ -242,6 +238,7 @@ public Comparator<codigoInfraccion> darComparadorCodigo(String caracteristicaCom
 	}
 	public Comparendo darPrimerComparendoPorLocalidad(String pLocalidad){
 		ArregloDinamico<Comparendo>lista= datosOrdenadoLocalidad;
+		ordenarArreglos();
 		int inicio = 0;
 		int fin = lista.darTamano() - 1;
 		boolean encontre = false;
@@ -249,11 +246,11 @@ public Comparator<codigoInfraccion> darComparadorCodigo(String caracteristicaCom
 		while( inicio <= fin && !encontre )
 		{
 			int medio = ( inicio + fin ) / 2;
-			if( lista.darElemento(medio).darLocalidad().compareTo(pLocalidad)==0 ){
+			if( lista.darElemento(medio).darLocalidad().compareToIgnoreCase(pLocalidad)==0 ){
 				respuesta = lista.darElemento(medio);
 				encontre = true;
 			}
-			else if( lista.darElemento(medio).darLocalidad().compareTo(pLocalidad)>0 )
+			else if( lista.darElemento(medio).darLocalidad().compareToIgnoreCase(pLocalidad)>0 )
 				fin = medio - 1;
 			else
 				inicio = medio + 1;
@@ -270,11 +267,11 @@ public Comparator<codigoInfraccion> darComparadorCodigo(String caracteristicaCom
 		while( inicio <= fin && !encontre )
 		{
 			int medio = ( inicio + fin ) / 2;
-			if( lista.darElemento(medio).darInfraccion().compareTo(pInfraccion)==0 ){
+			if( lista.darElemento(medio).darInfraccion().compareToIgnoreCase(pInfraccion)==0 ){
 				respuesta = lista.darElemento(medio);
 				encontre = true;
 			}
-			else if( lista.darElemento(medio).darInfraccion().compareTo(pInfraccion)>0 )
+			else if( lista.darElemento(medio).darInfraccion().compareToIgnoreCase(pInfraccion)>0 )
 				fin = medio - 1;
 			else
 				inicio = medio + 1;
@@ -303,7 +300,7 @@ public Comparator<codigoInfraccion> darComparadorCodigo(String caracteristicaCom
 			}
 
 		}
-		Ordenamientos.sortMerge(res.darElementos(), darComparador("InfraccionInver"));
+		Ordenamientos.sortMerge(res, darComparador("InfraccionInver"));
 		return res;
 	}
 
@@ -371,7 +368,7 @@ public Comparator<codigoInfraccion> darComparadorCodigo(String caracteristicaCom
 	}
 	public  void ordenarPorMergeSort(ArregloDinamico<Comparendo> a, Comparator comparador) 
 	{  // Merge a[lo..mid] with a[mid+1..hi].
-		Ordenamientos.sortMerge(a.darElementos(), comparador);
+		Ordenamientos.sortMerge(a, comparador);
 	}
 	public void ordenarPorQuick(ArregloDinamico<Comparendo> datos, Comparator comparador)
 	{
@@ -402,52 +399,7 @@ public Comparator<codigoInfraccion> darComparadorCodigo(String caracteristicaCom
 		}
 		return null;
 	}
-	public static class compararPorInfraccion implements Comparator<Comparendo>{
-
-		@Override
-		public int compare(Comparendo o1, Comparendo o2) 
-		{
-			return o1.darInfraccion().compareTo(o2.darInfraccion());
-		}
-
-	}
-
-	public static class compararPorFecha implements Comparator<Comparendo>{
-		@Override
-		public int compare(Comparendo o1, Comparendo o2) {
-			return o1.darFecha().compareTo(o2.darFecha());
-
-		}
-
-	}
-
-	public static class compararPorID implements Comparator<Comparendo>{
-		@Override
-		public int compare(Comparendo o1, Comparendo o2) 
-		{
-			if(o1.darID()<o2.darID())return -1;
-			else if (o1.darID()>o2.darID())
-				return 1;
-			return 0;	
-		}
-
-	}
-	public static class compararPorLocalidad implements Comparator<Comparendo>{
-		@Override
-		public int compare(Comparendo o1, Comparendo o2) {
-			return o1.darLocalidad().compareTo(o2.darLocalidad());	
-		}
-
-	}
-	public static class compararPorInfraccionInversa implements Comparator<Comparendo>{
-
-		@Override
-		public int compare(Comparendo o1, Comparendo o2) 
-		{
-			return -(o1.darInfraccion().compareTo(o2.darInfraccion()));
-		}
-
-	}
+	
 	public Comparator<Comparendo> darComparador(String caracteristicaComparable){
 
 		if(caracteristicaComparable.equals("ID"))
@@ -475,7 +427,7 @@ public Comparator<codigoInfraccion> darComparadorCodigo(String caracteristicaCom
 				@Override
 				public int compare(Comparendo o1, Comparendo o2) 
 				{
-					return o1.darInfraccion().compareTo(o2.darInfraccion());
+					return o1.darInfraccion().compareToIgnoreCase(o2.darInfraccion());
 				}
 			};
 
@@ -489,7 +441,7 @@ public Comparator<codigoInfraccion> darComparadorCodigo(String caracteristicaCom
 				@Override
 				public int compare(Comparendo o1, Comparendo o2) 
 				{
-					return -(o1.darInfraccion().compareTo(o2.darInfraccion()));
+					return -(o1.darInfraccion().compareToIgnoreCase(o2.darInfraccion()));
 				}
 			};
 
@@ -514,7 +466,7 @@ public Comparator<codigoInfraccion> darComparadorCodigo(String caracteristicaCom
 			Comparator<Comparendo> Localidad = new Comparator<Comparendo>() {
 				@Override
 				public int compare(Comparendo o1, Comparendo o2) {
-					return o1.darLocalidad().compareTo(o2.darLocalidad());	
+					return o1.darLocalidad().compareToIgnoreCase(o2.darLocalidad());	
 				}
 			};
 			return Localidad;

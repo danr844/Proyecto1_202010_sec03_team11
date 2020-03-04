@@ -90,10 +90,17 @@ public class Ordenamientos {
 		// Sort right part a[j+1 .. hi].   
 
 	}
-	public static void sortMerge(Comparable[] a, Comparator comparador)
+	public static void sortMerge2( ArregloDinamico<codigoInfraccion>b, Comparator comparador)
 	{
-		aux = new Comparable[a.length]; // Allocate space just once.
-		sort(a, 0, a.length - 1, comparador);
+		Comparable[] a = b.darElementos();
+		aux = new Comparable[b.darTamano()]; // Allocate space just once.
+		sort(a, 0, b.darTamano() - 1, comparador);
+	}
+	public static void sortMerge( ArregloDinamico<Comparendo>b, Comparator comparador)
+	{
+		Comparable[] a = b.darElementos();
+		aux = new Comparable[b.darTamano()]; // Allocate space just once.
+		sort(a, 0, b.darTamano() - 1, comparador);
 	}
 	
 	public static void sort(Comparable[] a, int lo, int hi, Comparator comparador)   
